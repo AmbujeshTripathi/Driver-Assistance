@@ -5,6 +5,7 @@
     <color name="materail_light_blue_deep">#3F51B5</color>
     <color name="materail_dark_pink">#C2185B</color>
     <color name="material_light_pink">#E91E63</color>
+    <color name="colorAccentdark">#e64b37</color>
     <!-- floating icon colors -->
     <color name="black_semi_transparent">#B2000000</color>
     <color name="background">#e5e5e5</color>
@@ -101,4 +102,5 @@
 
 
     <color name="orange">#FE642E</color>
+    <color name="documentImageBackground">#efefef</color>
 </resources>

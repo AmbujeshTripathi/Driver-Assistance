@@ -17,10 +17,11 @@ public interface Constants {
     String APP_INSURER = "";
 
 
-    String BASE_URL_CONSTANT = "";
+    String BASE_URL_CONSTANT = "http://servicestaging1.gaadi.com/service_apis/api_dummy";
 
     String OTP_VERIFICATION = "";
     String DEALER_LOGIN = "";
+    String SUB_STATUS_LIST_URL = "/get_sub_status.php";
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION}
+    public enum SERVICE_MODE {OTP_RECEIVE, SUB_STATUS_LIST, OTP_VERIFICATION}
 }

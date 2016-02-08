@@ -3,6 +3,7 @@ package com.mygaadi.driverassistance.retrofit;
 import com.mygaadi.driverassistance.MyApplication;
 import com.mygaadi.driverassistance.model.DealerLoginModel;
 import com.mygaadi.driverassistance.model.OtpModel;
+import com.mygaadi.driverassistance.model.SubStatusListModel;
 
 import java.util.HashMap;
 
@@ -24,4 +25,7 @@ public class RetrofitRequest {
     }
 
 
+    public static void getSubStatus(HashMap<String, String> map, MyCallback<SubStatusListModel> cb) {
+        restService.getSubStatusList(map, cb);
+    }
 }

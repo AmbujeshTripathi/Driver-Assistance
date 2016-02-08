@@ -4,7 +4,9 @@ package com.mygaadi.driverassistance.retrofit;
 import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.model.DealerLoginModel;
 import com.mygaadi.driverassistance.model.OtpModel;
+import com.mygaadi.driverassistance.model.SubStatusListModel;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit.http.FieldMap;
@@ -21,4 +23,7 @@ public interface RestService {
     @POST(Constants.OTP_VERIFICATION)
     void otpVerification(@FieldMap Map<String, String> map, MyCallback<DealerLoginModel> callback);
 
+    @FormUrlEncoded
+    @POST(Constants.SUB_STATUS_LIST_URL)
+    void getSubStatusList(@FieldMap HashMap<String, String> map, MyCallback<SubStatusListModel> cb);
 }

@@ -63,7 +63,7 @@
     <!-- emi Custom seek bar -->
     <!--<style name="CustomSeekBar" parent="android:Widget.SeekBar">-->
         <!--<item name="android:progressDrawable">@drawable/custom_seek_bar</item>-->
-        <!--<item name="android:thumb">@drawable/seek_bar_thumb</item>-->
+        <!--<item name="android:status_in_progress">@drawable/seek_bar_thumb</item>-->
         <!--<item name="android:thumbOffset">@dimen/dimen_zero</item>-->
     <!--</style>-->
 
