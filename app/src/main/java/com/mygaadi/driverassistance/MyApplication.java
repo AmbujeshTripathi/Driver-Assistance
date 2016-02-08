@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.utils.FontOverrideUtils;
-import com.mygaadi.driverassistance.utils.UtilitySingleton;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -63,13 +62,13 @@ public class MyApplication extends Application {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("x-auth-key ", "lms_service");
+             /*   request.addHeader("x-auth-key ", "lms_service");
                 request.addHeader("x-auth-apitoken", "wxThLeZoBXmKIDLeGsNeuuZwkhQqhGsXfI7ID5D1I1A=");
 
                 //Adding required headers. If the value found then put the values other wise set with blank string
                 Context context = MyApplication.getInstance().getApplicationContext();
                 request.addHeader("x-auth-userid", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USERID, ""));
-                request.addHeader("x-auth-usertoken", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USER_TOKEN, ""));
+                request.addHeader("x-auth-usertoken", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USER_TOKEN, ""));*/
             }
         };
 

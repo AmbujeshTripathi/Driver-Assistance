@@ -17,7 +17,8 @@ public interface Constants {
     String APP_INSURER = "";
 
 
-    String BASE_URL_CONSTANT = "";
+    String BASE_URL_CONSTANT = "http://servicestaging1.gaadi.com";
+    String LOGIN_URL = "/service_apis/api_dummy/api_login.php";
 
     String OTP_VERIFICATION = "";
     String DEALER_LOGIN = "";
