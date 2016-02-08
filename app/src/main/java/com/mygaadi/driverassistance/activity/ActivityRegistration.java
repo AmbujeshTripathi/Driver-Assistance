@@ -349,7 +349,7 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
             case OTP_RECEIVE:
                 stopProgress();
                 otpModel = (OtpModel) model;
-                if (!Boolean.parseBoolean(otpModel.getStatus())) {
+                if (!(otpModel.getStatus())) {
                     Utility.showToast(this, otpModel.getMessage());
                     return;
                 }
@@ -366,7 +366,7 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
 
             case OTP_VERIFICATION:
                 dealerLoginModel = (DealerLoginModel) model;
-                if (Boolean.parseBoolean(((DealerLoginModel) model).getStatus())) {
+                if ((((DealerLoginModel) model).getStatus())) {
                     {
                         stopTimer();
                         mOtpDialog.dismiss();

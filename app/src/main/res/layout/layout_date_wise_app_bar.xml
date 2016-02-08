@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_viewfordate"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/White"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
+
+
+    <LinearLayout
+        android:id="@+id/li_tvtodaydate"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selector_later"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvtodaydate"
+            style="@style/labelDateStrip"
+            android:text="27" />
+
+        <TextView
+            android:id="@+id/tvTodayText"
+            style="@style/labelDateText"
+            android:text="TODAY" />
+
+        <ImageView
+            android:id="@+id/img_date_selectbar_tvtoday"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/card_upper_view"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/li_tvnextday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selector_later"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvnextday"
+            style="@style/labelDateStrip"
+            android:text="27" />
+
+        <TextView
+            android:id="@+id/tvNextDayText"
+            style="@style/labelDateText"
+            android:text="TODAY" />
+
+        <ImageView
+            android:id="@+id/img_date_selectbar_nextday"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/card_upper_view"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/li_tvdayafterday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selector_later"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvdayafterday"
+            style="@style/labelDateStrip"
+            android:text="27" />
+
+        <TextView
+            android:id="@+id/tvDayAfterDayText"
+            style="@style/labelDateText"
+            android:text="TODAY" />
+
+        <ImageView
+            android:id="@+id/img_date_selectbar_dayafterday"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/card_upper_view"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/li_tvdayafter2days"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/selector_later"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvdayafter2days"
+            style="@style/labelDateStrip"
+            android:text="27" />
+
+        <TextView
+            android:id="@+id/tvDayAfter2DaysText"
+            style="@style/labelDateText"
+            android:text="TODAY" />
+
+        <ImageView
+            android:id="@+id/img_date_selectbar2_dayafter2days"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/card_upper_view"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingRight="16dp"
+        android:gravity="center_vertical|right"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tv_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_calender" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_calendar"-->
+            <!--style="@style/labelDateStrip"-->
+            <!--android:layout_marginBottom="2dp"-->
+            <!--android:background="@drawable/selector_later"-->
+            <!--android:drawableLeft="@drawable/ic_history_black_24dp"-->
+            <!--android:drawablePadding="5dp"-->
+            <!--android:text="@string/later"-->
+            <!--android:textSize="14sp"-->
+            <!--android:visibility="gone" />-->
+    </LinearLayout>
+</LinearLayout>

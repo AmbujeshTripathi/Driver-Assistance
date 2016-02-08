@@ -12,6 +12,8 @@ public interface Constants {
     String USER_TOKEN = "";
     String USER_NAME = "";
     String USER_EMAIL = "";
+    String START_TIME = "StartTime";
+    String END_TIME = "EndTime";
 
 
     String APP_INSURER = "";
@@ -22,6 +24,7 @@ public interface Constants {
 
     String OTP_VERIFICATION = "";
     String DEALER_LOGIN = "";
+    String REQUEST_JOBS = "";
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION}
+    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS}
 }

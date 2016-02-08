@@ -3,12 +3,14 @@ package com.mygaadi.driverassistance.retrofit;
 
 import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.model.DealerLoginModel;
+import com.mygaadi.driverassistance.model.JobDetailModel;
 import com.mygaadi.driverassistance.model.OtpModel;
 
 import java.util.Map;
 
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 public interface RestService {
@@ -20,5 +22,8 @@ public interface RestService {
     @FormUrlEncoded
     @POST(Constants.OTP_VERIFICATION)
     void otpVerification(@FieldMap Map<String, String> map, MyCallback<DealerLoginModel> callback);
+
+    @GET(Constants.REQUEST_JOBS)
+    void getJobs(@FieldMap Map<String, String> map, MyCallback<JobDetailModel> callback);
 
 }
