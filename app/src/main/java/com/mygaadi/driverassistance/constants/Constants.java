@@ -27,6 +27,5 @@ public interface Constants {
     String SUB_STATUS_LIST_URL = "/get_sub_status.php";
     String REQUEST_JOBS = "";
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS}
-    public enum SERVICE_MODE {OTP_RECEIVE, SUB_STATUS_LIST, OTP_VERIFICATION}
+    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, SUB_STATUS_LIST}
 }

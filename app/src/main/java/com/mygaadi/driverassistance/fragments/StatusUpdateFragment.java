@@ -100,16 +100,16 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             return;
         }
 
-        SubStatusListModel subStatusModel = (SubStatusListModel) model;
-        if (!Boolean.parseBoolean(subStatusModel.getStatus())) {
-            Snackbar.make(getView(), subStatusModel.getMessage(), Snackbar.LENGTH_SHORT).show();
+        SubStatusListModel subStatusListModel = (SubStatusListModel) model;
+        if (!subStatusListModel.getStatus()) {
+            Snackbar.make(getView(), subStatusListModel.getMessage(), Snackbar.LENGTH_SHORT).show();
             return;
         }
         //TODO need to integrate the check to select any of two lists (Pick up or Drop)
         if (isPickUpJob) {
-            subStatusList = subStatusModel.getData().getPickUp();
+            subStatusList = subStatusListModel.getData().getPickUp();
         } else {
-            subStatusList = subStatusModel.getData().getDrop();
+            subStatusList = subStatusListModel.getData().getDrop();
         }
         setStatusUpdateListOnViews(subStatusList);
     }
