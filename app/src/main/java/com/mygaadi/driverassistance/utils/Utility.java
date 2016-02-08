@@ -88,7 +88,7 @@ public class Utility {
     }
 
     /**
-     * MEthod to fire an intent for message sending
+     * Method to fire an intent for message sending
      *
      * @param context context
      * @param message msg
@@ -191,7 +191,6 @@ public class Utility {
             fragmentTransaction.commit();
         }
     }
-
 
 
     public static CustomGearDialog showLoadingDialog(Context context, String message) {
