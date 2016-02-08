@@ -1,0 +1,75 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/transparent"
+        android:paddingBottom="@dimen/dimen_fifteen"
+        android:paddingLeft="@dimen/dimen_twenty"
+        android:paddingRight="@dimen/dimen_twenty"
+        android:paddingTop="@dimen/dimen_fifteen">
+
+        <ImageView
+            android:id="@+id/gear3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:alpha=".85"
+            android:src="@drawable/gear_large_gray" />
+
+        <LinearLayout
+            android:id="@+id/layoutGear1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gear3"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/car"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:alpha="1"
+                    android:src="@drawable/car_loading_gray" />
+
+                <ImageView
+                    android:id="@+id/gear1"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:alpha="1"
+                    android:src="@drawable/gear_large_orange" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/gear2"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:alpha=".85"
+                android:src="@drawable/gear_large_gray" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textGearProgressDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha=".85"
+            android:layout_below="@+id/layoutGear1"
+            android:layout_centerHorizontal="true"
+            android:text="@string/loadingApplicationData"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_size_sixteen" />
+
+    </RelativeLayout>
+</FrameLayout>

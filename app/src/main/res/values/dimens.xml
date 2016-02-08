@@ -1,0 +1,95 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="widthforstackview">350dp</dimen>
+    <dimen name="textpadding">5dp</dimen>
+    <dimen name="marginfordate">3dp</dimen>
+    <dimen name="dimen_zero">0dp</dimen>
+    <dimen name="dimen_zero_point_one">0.1dp</dimen>
+    <dimen name="dimen_zero_point_five">0.5dp</dimen>
+    <dimen name="dimen_one">1dp</dimen>
+    <dimen name="dimen_two">2dp</dimen>
+    <dimen name="dimen_three">3dp</dimen>
+    <dimen name="dimen_four">4dp</dimen>
+    <dimen name="dimen_five">5dp</dimen>
+    <dimen name="dimen_six">6dp</dimen>
+    <dimen name="dimen_eight">8dp</dimen>
+    <dimen name="dimen_ten">10dp</dimen>
+    <dimen name="dimen_fifteen">15dp</dimen>
+    <dimen name="dimen_sixteen">16dp</dimen>
+    <dimen name="dimen_seventeen">17dp</dimen>
+    <dimen name="dimen_eighteen">18dp</dimen>
+    <dimen name="dimen_twenty">20dp</dimen>
+    <dimen name="dimen_twentyfive">25dp</dimen>
+    <dimen name="dimen_thirty">30dp</dimen>
+    <dimen name="dimen_thirty_two">32dp</dimen>
+    <dimen name="dimen_thirty_five">35dp</dimen>
+    <dimen name="dimen_forty">40dp</dimen>
+    <dimen name="dimen_fourty_five">45dp</dimen>
+    <dimen name="dimen_fifty">50dp</dimen>
+    <dimen name="dimen_sixty">60dp</dimen>
+    <dimen name="dimen_sixty_five">65dp</dimen>
+    <dimen name="dimen_seventy">70dp</dimen>
+    <dimen name="dimen_seventy_five">75dp</dimen>
+    <dimen name="dimen_eighty">80dp</dimen>
+    <dimen name="dimen_ninty">90dp</dimen>
+    <dimen name="dimen_one_hundered">100dp</dimen>
+    <dimen name="dimen_one_hundered_ten">110dp</dimen>
+    <dimen name="dimen_one_hundered_twenty">120dp</dimen>
+    <dimen name="dimen_one_hundered_twenty_five">125dp</dimen>
+    <dimen name="dimen_one_hundered_thirty">130dp</dimen>
+    <dimen name="dimen_one_hundered_fifty">150dp</dimen>
+    <dimen name="dimen_one_hundered_seventy">170dp</dimen>
+    <dimen name="dimen_two_hundered">200dp</dimen>
+    <dimen name="dimen_two_hundered_fifty">250dp</dimen>
+    <dimen name="dimen_twoforty">240dp</dimen>
+    <dimen name="sp_size_ten">10sp</dimen>
+    <dimen name="sp_size_eleven">11sp</dimen>
+    <dimen name="sp_size_twelve">12sp</dimen>
+    <dimen name="sp_size_thirteen">13sp</dimen>
+    <dimen name="sp_size_fourteen">14sp</dimen>
+    <dimen name="sp_size_fifteen">15sp</dimen>
+    <dimen name="sp_size_sixteen">16sp</dimen>
+    <dimen name="sp_size_eighteen">18sp</dimen>
+    <dimen name="sp_size_twenty">20sp</dimen>
+    <dimen name="sp_size_twenty_two">22sp</dimen>
+    <dimen name="sp_size_twenty_three">23sp</dimen>
+    <dimen name="sp_size_twenty_four">24sp</dimen>
+    <dimen name="sp_size_twenty_five">25sp</dimen>
+    <dimen name="sp_size_twenty_six">26sp</dimen>
+    <dimen name="sp_size_twenty_eight">28sp</dimen>
+    <dimen name="sp_size_thirty">30sp</dimen>
+    <dimen name="sp_size_thirty_five">35sp</dimen>
+    <dimen name="sp_size_thity_eight">38sp</dimen>
+    <dimen name="dimen_minus_five">-5dp</dimen>
+    <dimen name="dimen_one_hundred_twenty">120dp</dimen>
+    <dimen name="dimen_one_hundred_ten">110dp</dimen>
+    <dimen name="normal_text_size">14dp</dimen>
+
+    <!--Dimensions used for Landing Stack screen-->
+    <dimen name="leadCategoryTextSize">35sp</dimen>
+    <dimen name="currentDayDetailsTextSize">16sp</dimen>
+    <dimen name="leadCountTextSize">20sp</dimen>
+    <dimen name="mainLeadCountTextSize">30sp</dimen>
+    <dimen name="mainLeadMargin">1dp</dimen>
+    <dimen name="leadTextSecondary">13sp</dimen>
+    <dimen name="leadCoundHeadingTextSize">120sp</dimen>
+    <dimen name="dateTextSize">16sp</dimen>
+    <dimen name="dateDayTextSize">12sp</dimen>
+
+    <!-- Dimen values for Lead Detail Screen-->
+    <dimen name="leadDetailMarginTop">12dp</dimen>
+    <dimen name="leadDetailHeadingTextSize">20sp</dimen>
+    <dimen name="leadDetailTextSize">18sp</dimen>
+    <dimen name="sETextSize">16sp</dimen>
+
+    <!--Dimentions for Tab Layout-->
+    <dimen name="tab_max_width">264dp</dimen>
+    <dimen name="tab_padding_bottom">16dp</dimen>
+    <dimen name="tab_label">14sp</dimen>
+    <dimen name="custom_tab_layout_height">72dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+</resources>

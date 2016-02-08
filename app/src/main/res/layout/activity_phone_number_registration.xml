@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    style="@style/match"
+    android:background="@drawable/login_registe_gradient"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/li_lmsicon"
+        style="@style/matchWidth"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            style="@style/wrap"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/launcher_icon" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/White"
+            android:textSize="@dimen/dimen_thirty_five"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/wrap"
+            android:text="@string/simplifyingyourlife"
+            android:textColor="@color/White"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/matchWidth"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/et_mobile_number"
+            style="@style/matchWidth"
+            android:layout_height="@dimen/dimen_fifty"
+            android:layout_margin="@dimen/sp_size_ten"
+            android:background="@drawable/empty_lined_bg"
+            android:gravity="center"
+            android:hint="@string/enter_mobile_number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_size_twenty"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            style="@style/center_bottom_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dimen_three"
+            android:layout_marginTop="@dimen/dimen_ten"
+            android:background="@drawable/lets_go"
+            android:text="@string/ph_register" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/matchWidth"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_poweredby"
+            style="@style/wrap"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dimen_ten"
+            android:text="@string/powered_by"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/cardhekoicon"
+            style="@style/wrap"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/cardekho_logo" />
+    </LinearLayout>
+
+</LinearLayout>

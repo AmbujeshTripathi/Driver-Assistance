@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="ProgressHUD" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <!-- action bar menu items bg color -->
+    <!-- Application theme. -->
+    <style name="MyAppActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- <item name="android:windowContentOverlay">@null</item>
+         &lt;!&ndash; <item name="android:popupMenuStyle">@style/PopupMenu</item> &ndash;&gt;
+         <item name="android:dropDownListViewStyle">@style/TestSpinnerStyle</item>
+         <item name="android:itemBackground">@color/light_gray</item>-->
+        <!--<item name="datePickerStyle">@style/Widget.Holo.DatePicker</item>-->
+        <!--<item name="numberPickerStyle">@style/NPWidget.Holo.NumberPicker</item>-->
+        <item name="android:typeface">monospace</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Toolbar style-->
+    <style name="toolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <!--<style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">-->
+        <!--<item name="android:drawable">@drawable/radio_circle</item>-->
+    <!--</style>-->
+
+
+    <style name="PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+    <style name="NewDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.UserDialog" parent="android:style/Theme.Dialog">
+        <!--<item name="android:windowFrame">@null</item>-->
+        <!-- <item name="android:windowIsFloating">true</item>-->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <!-- <item name="android:windowBackground">@android:color/transparent</item>-->
+    </style>
+
+    <!-- emi Custom seek bar -->
+    <!--<style name="CustomSeekBar" parent="android:Widget.SeekBar">-->
+        <!--<item name="android:progressDrawable">@drawable/custom_seek_bar</item>-->
+        <!--<item name="android:thumb">@drawable/seek_bar_thumb</item>-->
+        <!--<item name="android:thumbOffset">@dimen/dimen_zero</item>-->
+    <!--</style>-->
+
+    <style name="wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="matchWidth" parent="match">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="matchHeight" parent="match">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <!--<style name="weightWidth" parent="wrap">-->
+        <!--<item name="android:layout_width">@dimen/dimen_zero</item>-->
+        <!--<item name="android:layout_weight">@integer/integer_one</item>-->
+    <!--</style>-->
+
+    <!--<style name="weightHeight" parent="wrap">-->
+        <!--<item name="android:layout_height">@dimen/dimen_zero</item>-->
+        <!--<item name="android:layout_weight">@integer/integer_one</item>-->
+    <!--</style>-->
+
+    <!--<style name="page_headers" parent="wrap">-->
+        <!--<item name="android:gravity">center_vertical</item>-->
+        <!--<item name="android:background">@drawable/header</item>-->
+        <!--<item name="android:paddingLeft">15dp</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+        <!--<item name="android:textSize">15sp</item>-->
+    <!--</style>-->
+
+    <style name="center_bottom_button" parent="wrap">
+        <item name="android:textColor">@color/White</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp_size_sixteen</item>
+    </style>
+
+    <style name="headings" parent="wrap">
+        <item name="android:textSize">@dimen/sp_size_sixteen</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="sub_text" parent="wrap">
+        <item name="android:textSize">@dimen/sp_size_twelve</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="all_text" parent="wrap">
+        <item name="android:textSize">@dimen/sp_size_fourteen</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="main_headings" parent="wrap">
+        <item name="android:textSize">@dimen/sp_size_sixteen</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Variants Features -->
+    <style name="variants_row_style" parent="wrap">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <!-- spinner devider -->
+    <style name="TestSpinnerStyle" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">#6E6E6E</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <!-- for calendar text style -->
+    <style name="calendar_event_style" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#FF6600</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+
+    <!-- animation fro Dialog -->
+
+    <style name="dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/grow_from_middle</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <!--<style name="dialog_animation_popup">-->
+        <!--<item name="android:windowEnterAnimation">@anim/wave_scale</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/fade_out</item>-->
+    <!--</style>-->
+
+    <!--<style name="dialog_animation_popup_exit">-->
+        <!--<item name="android:windowEnterAnimation">@anim/dialog_dissappear</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/fade_out</item>-->
+    <!--</style>-->
+
+    <!-- Card view styles -->
+    <style name="CardViewStyle.Light" parent="CardView.Light">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="CardViewStyle.Dark" parent="CardView.Dark">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <!--    Styles defined by mSoni Date: 07-Aug-2015. Style defined here for the same kind of views-->
+    <style name="divider">
+        <item name="android:layout_height">2px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginBottom">@dimen/dimen_ten</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_ten</item>
+        <item name="android:layout_marginRight">@dimen/dimen_ten</item>
+        <item name="android:layout_marginTop">@dimen/dimen_ten</item>
+        <item name="android:background">@color/details_divider</item>
+    </style>
+
+    <style name="divider_header">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginBottom">@dimen/dimen_ten</item>
+        <item name="android:layout_marginTop">@dimen/dimen_ten</item>
+        <item name="android:background">@color/details_divider</item>
+    </style>
+
+
+    <!--Style for Select Service Needs Layout-->
+
+    <!--<style name="selectServiceNeedsLayout">-->
+        <!--<item name="android:layout_width">@dimen/dimen_one_hundered_twenty_five</item>-->
+        <!--<item name="android:padding">@dimen/dimen_five</item>-->
+        <!--<item name="android:layout_height">@dimen/dimen_eighty</item>-->
+        <!--<item name="android:background">@drawable/selector_select_service_need</item>-->
+    <!--</style>-->
+
+    <!--Style for Select Service Needs Layout-->
+
+    <style name="iconCarService">
+        <item name="android:layout_width">@dimen/dimen_fourty_five</item>
+        <item name="android:layout_height">@dimen/dimen_fourty_five</item>
+    </style>
+    <!--Style for Heading Line 1 for lead Details view-->
+
+    <!--Styles for landing stack views-->
+    <style name="txtLeadCountStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColorLight</item>
+        <item name="android:textSize">@dimen/leadTextSecondary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="txtLeadCountStyleSub">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColorLight</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--Edit Text Styles for Text Views used in Create New lead-->
+    <style name="edtText_createNewLead">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:background">@android:color/transparent</item>-->
+        <item name="android:layout_marginTop">@dimen/dimen_five</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_ten</item>
+        <item name="android:layout_marginRight">@dimen/dimen_ten</item>
+        <item name="android:paddingLeft">@dimen/dimen_five</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/sp_size_sixteen</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!--Text Styles for the labels  used in Create New lead-->
+    <style name="textLabel_createNewLead">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/dimen_ten</item>
+        <item name="android:textColor">@color/textColorLabel</item>
+
+    </style>
+    <!--Text label style for the labels on screen lead info dialog-->
+    <style name="textLabel_leadInfo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_ten</item>
+        <item name="android:layout_marginRight">@dimen/dimen_ten</item>
+        <item name="android:padding">@dimen/dimen_five</item>
+        <item name="android:textSize">@dimen/sp_size_eighteen</item>
+        <item name="android:textColor">@color/light_yellow</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <!--    Styles defined by mSoni . Style defined here for the same kind of dividers used in lead info dialog-->
+    <style name="dividerLeadInfo">
+        <item name="android:layout_height">@dimen/dimen_one</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/dimen_two</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_two</item>
+        <item name="android:layout_marginTop">@dimen/dimen_ten</item>
+        <item name="android:layout_marginBottom">@dimen/dimen_ten</item>
+        <item name="android:background">@color/light_gray</item>
+    </style>
+
+    <style name="dividerLeadInfo_new">
+        <item name="android:layout_height">@dimen/dimen_one</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/dimen_two</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_two</item>
+        <item name="android:layout_marginTop">@dimen/dimen_ten</item>
+        <item name="android:layout_marginBottom">@dimen/dimen_ten</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <!--Edit Text style for the labels on screen lead info dialog-->
+    <style name="editText_leadInfo">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_ten</item>
+        <item name="android:layout_marginRight">@dimen/dimen_ten</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:enabled">false</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">@dimen/dimen_five</item>
+        <item name="android:textSize">@dimen/sp_size_eighteen</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <!--Layout Styles for the layout containing input field  used in Create New lead-->
+    <style name="layout_createNewLeadEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/dimen_five</item>
+    </style>
+
+    <!--Text Styles for the labels  used in Create New lead-->
+    <style name="textHeading1_createNewLead">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_size_eighteen</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColorDark</item>
+    </style>
+
+    <!--<style name="issueRsaPolicyStyle">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_margin">20dp</item>-->
+        <!--<item name="android:textColor">@color/primaryColor</item>-->
+        <!--<item name="android:drawableRight">@drawable/ic_next</item>-->
+        <!--<item name="android:background">@drawable/bg_login</item>-->
+        <!--<item name="android:gravity">center_vertical</item>-->
+        <!--<item name="android:padding">20dp</item>-->
+    <!--</style>-->
+
+
+    <!--Text Styles for the labels  used in Create New lead-->
+    <style name="textListItems_createNewLead">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_size_fourteen</item>
+        <item name="android:paddingLeft">@dimen/dimen_ten</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textColorLabel</item>
+
+    </style>
+    <!--Text Styles for the labels  used in Create New lead-->
+    <style name="iconListItems_createNewLead">
+        <item name="android:layout_width">@dimen/dimen_forty</item>
+        <item name="android:layout_height">@dimen/dimen_forty</item>
+    </style>
+
+    <style name="divider_createNewLead">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/details_divider</item>
+    </style>
+
+    <style name="divider_Vertical">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/details_divider</item>
+    </style>
+
+    <style name="layoutListItem_createNewLead">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">@dimen/dimen_fifteen</item>
+        <item name="android:paddingRight">@dimen/dimen_fifteen</item>
+        <item name="android:paddingTop">@dimen/dimen_ten</item>
+        <item name="android:paddingBottom">@dimen/dimen_ten</item>
+    </style>
+
+    <style name="layoutListItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+    <!--Style for the dotted view used in view flipper-->
+    <!--<style name="view_flipper_dots">-->
+        <!--<item name="android:layout_height">@dimen/dimen_twentyfive</item>-->
+        <!--<item name="android:layout_width">@dimen/dimen_twentyfive</item>-->
+        <!--<item name="android:src">@drawable/selector_dot_bg</item>-->
+    <!--</style>-->
+    <!--&lt;!&ndash;Style for the dotted view used in view flipper&ndash;&gt;-->
+    <!--<style name="view_flipper_image">-->
+        <!--<item name="android:layout_height">@dimen/dimen_thirty</item>-->
+        <!--<item name="android:layout_width">@dimen/dimen_thirty</item>-->
+        <!--<item name="android:background">@drawable/selector_oval_bg</item>-->
+    <!--</style>-->
+
+    <!--Style for the Save and Continue Button used in view flipper-->
+    <style name="saveContinueButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/selector_blue_button</item>
+        <item name="android:layout_margin">@dimen/dimen_ten</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_fifteen</item>
+        <item name="android:layout_marginRight">@dimen/dimen_fifteen</item>
+        <item name="android:text">@string/saveAndContinue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--Style for the skip button used in view flipper-->
+    <!--<style name="skipButton">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:background">@drawable/selector_skip</item>-->
+        <!--<item name="android:layout_marginTop">@dimen/dimen_ten</item>-->
+        <!--<item name="android:layout_marginRight">@dimen/dimen_eight</item>-->
+        <!--<item name="android:text">@string/skip</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+        <!--<item name="android:layout_gravity">right</item>-->
+    <!--</style>-->
+
+    <!--Style for outer horizontal layout in home screen-->
+    <style name="labelMainLeadCount">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/textColorLabel</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/mainLeadCountTextSize</item>
+    </style>
+
+    <style name="labelDateStrip">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">@color/textColorLabel</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dateTextSize</item>
+    </style>
+
+    <style name="labelDateText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/textColorUltraLight</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dateDayTextSize</item>
+    </style>
+
+    <!--Style for Card View in home screen-->
+    <style name="cardView">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">.25</item>
+        <item name="android:layout_marginLeft">6dp</item>
+        <item name="android:layout_marginRight">6dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <!--Style for outer horizontal layout in home screen-->
+    <style name="labelLeadHeading">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/mainLeadMargin</item>
+        <item name="android:layout_marginTop">@dimen/mainLeadMargin</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/leadDetailHeadingTextSize</item>
+    </style>
+    <!--Style for outer horizontal layout in home screen-->
+    <style name="layoutHorHomeScreen">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">.25</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:weightSum">1</item>
+
+    </style>
+    <!--Style for layout of view item in home screen-->
+    <style name="layoutItemHomeScreen">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">.5</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- Styles for Views in lead details fragment-->
+    <style name="textMainLeadDetails">
+        <item name="android:textSize">@dimen/leadDetailTextSize</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/leadDetailMarginTop</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/textColorDark</item>
+    </style>
+
+    <!-- Styles for Views in lead details fragment-->
+    <style name="textMainLeadCountsSE">
+        <item name="android:textSize">@dimen/sETextSize</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@color/textColorDark</item>
+    </style>
+
+
+    <style name="textSecondarySE">
+        <item name="android:textSize">@dimen/sETextSize</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/textColorLight</item>
+    </style>
+
+    <style name="layoutRowSE">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:weightSum">100</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="textSecondaryLeadDetails">
+        <item name="android:textSize">@dimen/leadDetailTextSize</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/textColorLight</item>
+    </style>
+
+
+    <style name="headingOrangeLeadDetails">
+        <item name="android:textSize">@dimen/leadDetailTextSize</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/leadDetailMarginTop</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="MyAppActionBarTheme.AppBarOverlay"
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="MyAppActionBarTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- End of styles for lead details fragment-->
+
+
+    <style name="rsaPlanDetailDividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dimen_zero_point_one</item>
+        <item name="android:background">@android:color/black</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
+</resources>

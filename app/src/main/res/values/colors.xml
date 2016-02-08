@@ -1,0 +1,104 @@
+<resources>
+    <color name="materail_dark_blue">#0288D1</color>
+    <color name="material_light_blue">#03A9F4</color>
+    <color name="materail_dark_blue_deep">#303F9F</color>
+    <color name="materail_light_blue_deep">#3F51B5</color>
+    <color name="materail_dark_pink">#C2185B</color>
+    <color name="material_light_pink">#E91E63</color>
+    <!-- floating icon colors -->
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="background">#e5e5e5</color>
+    <color name="half_black">#808080</color>
+    <color name="white">#fafafa</color>
+    <color name="light_hash">#BDBDBD</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
+    <color name="blue_semi_transparent">#805677fc</color>
+    <color name="blue_semi_transparent_pressed">#80738ffe</color>
+    <color name="light_yellow">#F5D0A9</color>
+
+    <!-- Circle Progress bar -->
+
+    <color name="circular_progress_default_progress">#ffffff</color>
+    <color name="circular_progress_default_background">#FE9A2E</color>
+    <color name="circular_progress_default_title">#ffffff</color>
+    <color name="circular_progress_default_subtitle">#ffffff</color>
+    <color name="White_gray">#F8F8F8</color>
+    <color name="Gunmetal">#2C3539</color>
+    <color name="White">#ffffff</color>
+    <color name="White_Dull">#f6f6f6</color>
+    <color name="yellow">#ffcc00</color>
+    <color name="blue">#0000FF</color>
+    <color name="divider_grey">#dddddd</color>
+    <color name="spalshcolor">#ef6626</color>
+    <color name="blue_dialog">#47b9e5</color>
+    <color name="gray">#a4a4a4</color>
+    <color name="light_gray">#34a4a4a4</color>
+    <color name="gray_dialog">#e7e7e7</color>
+    <color name="black">#000000</color>
+    <color name="send_grey">#ff9e9e9e</color>
+    <color name="shadow_black">#141907</color>
+
+    <color name="lightgray">#e7e7e7</color>
+    <color name="lightgray02">#bfbfbf</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorBackgroundProgress">#aaffffff</color>
+    <color name="thickgray">#626262</color>
+
+    <!-- Navigation drawer colors -->
+    <color name="list_item_title">#fff</color>
+    <color name="linear_layout_background">#20282E</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="list_divider">#272727</color>
+    <color name="counter_text_color">#c5c4c4</color>
+
+    <!-- Defining the text colors for the Labels in the application-->
+    <color name="textColorUltraLight">#ACADAF</color>
+    <color name="textColorLight">#716e70</color>
+    <color name="textColorDark">#ff2b2f2c</color>
+    <color name="textColorLabel">#ff494d4a</color>
+    <!--End of text colors declaration -->
+
+    <color name="divider_color"> #2d373e</color>
+    <color name="text_colorHeading">#ff2b2f2c</color>
+    <color name="text_colorLabel">#ff494d4a</color>
+    <color name="smalltext_text_color">#63686C</color>
+    <color name="feed_color">#535A62</color>
+    <color name="createleadtabcolor">#0B3861</color>
+    <!-- for Alerts -->
+    <color name="dialog_bg">#F9F5F2</color>
+    <color name="details_divider">#ffc1c5c8</color>
+    <color name="details_text_color">#9A9A9A</color>
+    <color name="light_black">#20282E</color>
+
+    <!-- for PriceQuote -->
+    <color name="pricequote_bg">#EFE8E2</color>
+    <color name="pricequote_white_bg">#F7F7F7</color>
+    <color name="pricequote_dialog_header_bg">#F7F7F7</color>
+    <color name="pricequote_fottor_bg">#34495E</color>
+    <color name="pricequote_onroadprice_bg">#E1D7CE</color>
+    <color name="brochure_dialog_bg">#101519</color>
+    <color name="very_light_gray">#F7F7F7</color>
+    <color name="very_dark_blue">#34495E</color>
+    <color name="very_light_blue">#45729E</color>
+    <color name="discount_variant_text_color">#585858</color>
+
+    <color name="tab_background_color">#FE642E</color>
+    <color name="colorPrimary">#DC592D</color>
+    <color name="colorPrimaryLight">#ccfec61f</color>
+    <color name="colorPrimaryDark">#B04724</color>
+    <color name="li_createlead_background_color">#0B3861</color>
+    <color name="drawer_background">#1F282D</color>
+
+    <!--For Tab Layout Integration-->
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#e66437</color>
+    <color name="tabsScrollColor">#FFFFFF</color>
+
+
+    <color name="orange">#FE642E</color>
+</resources>
