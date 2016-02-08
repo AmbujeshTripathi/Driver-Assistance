@@ -6,7 +6,7 @@ package com.mygaadi.driverassistance.constants;
 public interface Constants {
 
     String APP_PREF = "";
-    java.lang.String USERID = "";
+    String USERID = "";
     String KEY_MOBILE = "";
     String KEY_OTPCODE = "";
     String USER_TOKEN = "";
