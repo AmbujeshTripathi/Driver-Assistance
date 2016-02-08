@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mygaadi.driverassistance">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/launcher_icon"
@@ -28,7 +33,11 @@
             android:name=".activity.ActivityRegistration"
             android:screenOrientation="portrait" />
 
-
+        <service android:name=".services.GPSTrackerService">
+            <intent-filter>
+                <action android:name="com.mygaadi.driverassistance.services.GPSTrackerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

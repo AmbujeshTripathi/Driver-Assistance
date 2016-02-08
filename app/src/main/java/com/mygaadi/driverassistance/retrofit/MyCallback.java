@@ -16,8 +16,8 @@ import retrofit.client.Response;
 
 
 public class MyCallback<T> implements Callback<T> {
-    private RestCallback restCallback;
     private static String defaultMessage = "Loading";
+    private RestCallback restCallback;
     private CustomGearDialog mProgressHUD;
     private View v;
     private Context baseActivity;
@@ -81,8 +81,6 @@ public class MyCallback<T> implements Callback<T> {
             mProgressHUD.dismiss();
         }
     }
-
-
 
 
 }

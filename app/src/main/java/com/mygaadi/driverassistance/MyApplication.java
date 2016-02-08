@@ -62,7 +62,7 @@ public class MyApplication extends Application {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("x-auth-key ", "lms_service");
+             /*   request.addHeader("x-auth-key ", "lms_service");
                 request.addHeader("x-auth-apitoken", "wxThLeZoBXmKIDLeGsNeuuZwkhQqhGsXfI7ID5D1I1A=");
 
                 //Adding required headers. If the value found then put the values other wise set with blank string
@@ -81,8 +81,4 @@ public class MyApplication extends Application {
 
         return restAdapter;
     }
-
-
-
-
 }
