@@ -47,6 +47,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private boolean isPickUpJob;
     private ImageView imageView;
     private String mJobId;
+    private String mCustomerMobile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,17 +87,26 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         if (bundle == null) {
             return;
         }
+        String jobType = bundle.getString(Constants.JOB_TYPE).trim();
+        TextView tvPickUp = (TextView) rootView.findViewById(R.id.tvAddressPickup);
+        TextView tvDropOff = (TextView) rootView.findViewById(R.id.tvAddressDropOff);
         String customerAddress = bundle.getString(Constants.CUSTOMER_ADDRESS);
-        ((TextView) rootView.findViewById(R.id.tvAddressPickup)).setText(customerAddress);
-
         String hubAddress = bundle.getString(Constants.HUB_ADDRESS);
-        ((TextView) rootView.findViewById(R.id.tvAddressDropOff)).setText(hubAddress);
+        if (jobType == "1") {
+            tvPickUp.setText(customerAddress);
+            tvDropOff.setText(hubAddress);
+        } else {
+            tvPickUp.setText(hubAddress);
+            tvDropOff.setText(customerAddress);
+        }
+
 
         String startTime = bundle.getString(Constants.START_TIME);
         ((TextView) rootView.findViewById(R.id.tvTime)).setText(startTime);
 
 //        String endTime = bundle.getString(Constants.END_TIME);
         mJobId = bundle.getString(Constants.JOB_ID);
+        mCustomerMobile = bundle.getString(Constants.KEY_MOBILE);
     }
 
     private void setUpViews() {
