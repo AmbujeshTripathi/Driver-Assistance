@@ -1,4 +1,4 @@
-package com.mygaadi.driverassistance.fragment;
+package com.mygaadi.driverassistance.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,7 +19,11 @@ import jp.co.genestream.monthview.MonthViewPager;
 import jp.co.genestream.monthview.OnDayClickListener;
 import jp.co.genestream.monthview.OnMonthChangeListener;
 
+/**
+ * Created by Ambujesh on 2/9/2016.
+ */
 public class CalendarFragment extends Fragment {
+
     private View rootview;
     public static final String TAG = CalendarFragment.class.getName();
     private TextView mMonthTextView;
@@ -60,9 +64,9 @@ public class CalendarFragment extends Fragment {
 
                 DateStripController.mDateMonthYear = sdf_pgm
                         .format(calendar.getTime());
-//                MainActivity.SUB_LABEL = "LaterDate";
-//                MainActivity.LABEL = MainActivity.CATEGORY + "-" + MainActivity.SUB_LABEL + "-" + MainActivity.SCREEN_NAME;
-//                MyApplication.getInstance().trackEvent(MainActivity.CATEGORY, Constants.ACTION_CLICKED, MainActivity.LABEL);
+                //                MainActivity.SUB_LABEL = "LaterDate";
+                //                MainActivity.LABEL = MainActivity.CATEGORY + "-" + MainActivity.SUB_LABEL + "-" + MainActivity.SCREEN_NAME;
+                //                MyApplication.getInstance().trackEvent(MainActivity.CATEGORY, Constants.ACTION_CLICKED, MainActivity.LABEL);
                 popBackFragment();
             }
 
@@ -73,22 +77,22 @@ public class CalendarFragment extends Fragment {
 
 
     private void displayDemoIfNeeded() {
-//        boolean neverShowDemoAgain = UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Utility.KEY_IS_NEVER_SHOW_DEMO_CAL);
-//
-//        if (!neverShowDemoAgain) {
-//            ArrayList<LabeledPoint> arrayListPoints = new ArrayList<LabeledPoint>();
-//
-//            LabeledPoint p = new LabeledPoint(getActivity(), 0.50f, 0.90f,
-//                    getString(R.string.tap_left_right));
-//            arrayListPoints.add(p);
-//
-//            Intent intent = new Intent(getActivity(), TutorialActivity.class);
-//            intent.putExtra(Constants.TAG_DEMO_ACTION, "main");
-//            RoboDemo.prepareDemoActivityIntent(intent,
-//                    Utility.KEY_IS_NEVER_SHOW_DEMO_CAL, arrayListPoints);
-//            startActivity(intent);
-//            UtilitySingleton.getInstance(getActivity()).saveBooleanInSharedPref(Utility.KEY_IS_NEVER_SHOW_DEMO_CAL, true);
-//        }
+        //        boolean neverShowDemoAgain = UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Utility.KEY_IS_NEVER_SHOW_DEMO_CAL);
+        //
+        //        if (!neverShowDemoAgain) {
+        //            ArrayList<LabeledPoint> arrayListPoints = new ArrayList<LabeledPoint>();
+        //
+        //            LabeledPoint p = new LabeledPoint(getActivity(), 0.50f, 0.90f,
+        //                    getString(R.string.tap_left_right));
+        //            arrayListPoints.add(p);
+        //
+        //            Intent intent = new Intent(getActivity(), TutorialActivity.class);
+        //            intent.putExtra(Constants.TAG_DEMO_ACTION, "main");
+        //            RoboDemo.prepareDemoActivityIntent(intent,
+        //                    Utility.KEY_IS_NEVER_SHOW_DEMO_CAL, arrayListPoints);
+        //            startActivity(intent);
+        //            UtilitySingleton.getInstance(getActivity()).saveBooleanInSharedPref(Utility.KEY_IS_NEVER_SHOW_DEMO_CAL, true);
+        //        }
 
     }
 

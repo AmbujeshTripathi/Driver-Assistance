@@ -8,11 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mygaadi.driverassistance.MyApplication;
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.activity.MainActivity;
-import com.mygaadi.driverassistance.constants.Constants;
-import com.mygaadi.driverassistance.fragment.CalendarFragment;
+import com.mygaadi.driverassistance.fragments.CalendarFragment;
 import com.mygaadi.driverassistance.listeners.OnDateStripActionListener;
 
 import java.text.SimpleDateFormat;

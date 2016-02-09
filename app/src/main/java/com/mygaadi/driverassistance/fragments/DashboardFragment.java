@@ -1,5 +1,4 @@
-package com.mygaadi.driverassistance.fragment;
-
+package com.mygaadi.driverassistance.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Ambujesh on 2/9/2016.
  */
 public class DashboardFragment extends Fragment implements OnDateStripActionListener, RestCallback {
     public static final String TAG = "DashboardFragment";

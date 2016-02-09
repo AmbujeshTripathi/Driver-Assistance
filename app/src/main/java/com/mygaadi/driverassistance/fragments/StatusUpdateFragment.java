@@ -170,5 +170,4 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         dialog.show();
     }
 
-
 }
