@@ -41,7 +41,8 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.customerEmail.setText(jobDetailModel.getCustomerEmail());
         holder.customerName.setText(jobDetailModel.getCustomerName());
         holder.customerNumber.setText(jobDetailModel.getCustomerMobile());
-        holder.customerAddress.setText(jobDetailModel.getCustomerlocality());
+        holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
+        holder.hubAddress.setText(jobDetailModel.getHubAddress());
     }
 
     @Override
@@ -73,6 +74,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         TextView customerEmail;
         TextView customerNumber;
         TextView customerAddress;
+        TextView hubAddress;
         TextView requestTime;
 
 
@@ -83,6 +85,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
             customerEmail = (TextView) itemView.findViewById(R.id.customer_email);
             customerNumber = (TextView) itemView.findViewById(R.id.customer_mobile);
             customerAddress = (TextView) itemView.findViewById(R.id.customer_address);
+            hubAddress = (TextView) itemView.findViewById(R.id.service_address);
             customerName = (TextView) itemView.findViewById(R.id.customer_name);
         }
 

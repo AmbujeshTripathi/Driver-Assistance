@@ -14,16 +14,20 @@ public interface Constants {
     String USER_EMAIL = "email";
     String START_TIME = "from";
     String END_TIME = "to";
+    String IS_SELFIE_UPLOADED = "is_selfie_uploaded";
+    String CUSTOMER_ADDRESS = "customer_address";
+    String HUB_ADDRESS = "hub_address";
+    String JOB_ID = "job_id";
 
 
     String APP_INSURER = "";
 
 
     String BASE_URL_CONSTANT = "http://carservicedev1.gaadi.com/service_apis";
-    String LOGIN_URL = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String LOGIN_URL = "/save/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
 
-    String OTP_VERIFICATION = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
-    String REQUEST_JOBS = "/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String OTP_VERIFICATION = "/save/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String REQUEST_JOBS = "/fetch/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
     String SUB_STATUS_LIST_URL = "/get_sub_status.php";
     String KEY = "key";
 
