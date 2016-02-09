@@ -165,13 +165,13 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         if (resultSet == null) {
             resultSet = new ArrayList<>();
         }
+        resultSet.clear();
         resultSet.addAll(data);
-        if (customAdapter == null) {
-            customAdapter = new JobModelAdapter(getActivity(), data, this);
-            mRecyclerView.setAdapter(customAdapter);
-        } else {
-            customAdapter.notifyDataSetChanged();
-        }
+
+        customAdapter = new JobModelAdapter(getActivity(), resultSet, this);
+        mRecyclerView.setAdapter(customAdapter);
+        customAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -186,6 +186,8 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
                 bundle.putString(Constants.JOB_ID, item.getJobId());
                 bundle.putString(Constants.START_TIME, item.getStartTime());
                 bundle.putString(Constants.END_TIME, item.getEndTime());
+                bundle.putString(Constants.KEY_MOBILE, item.getCustomerMobile());
+                bundle.putString(Constants.JOB_TYPE, item.getJobType());
                 Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
 //                } else {
 //

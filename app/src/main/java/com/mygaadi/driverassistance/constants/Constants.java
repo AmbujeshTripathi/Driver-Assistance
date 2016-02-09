@@ -14,6 +14,7 @@ public interface Constants {
     String USER_EMAIL = "email";
     String START_TIME = "from";
     String END_TIME = "to";
+    String JOB_TYPE = "job_type";
     String IS_SELFIE_UPLOADED = "is_selfie_uploaded";
     String CUSTOMER_ADDRESS = "customer_address";
     String HUB_ADDRESS = "hub_address";
