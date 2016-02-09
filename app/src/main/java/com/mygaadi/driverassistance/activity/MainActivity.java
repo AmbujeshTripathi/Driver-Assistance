@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mygaadi.driverassistance.R;
+import com.mygaadi.driverassistance.fragments.DashboardFragment;
 import com.mygaadi.driverassistance.fragments.StatusUpdateFragment;
 import com.mygaadi.driverassistance.utils.Utility;
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, null, this);
+        Utility.navigateFragment(new DashboardFragment(), DashboardFragment.TAG, null, this);
     }
 
     @Override

@@ -12,8 +12,8 @@ public interface Constants {
     String USER_TOKEN = "user_token";
     String USER_NAME = "user_name";
     String USER_EMAIL = "email";
-    String START_TIME = "StartTime";
-    String END_TIME = "EndTime";
+    String START_TIME = "from";
+    String END_TIME = "to";
 
 
     String APP_INSURER = "";
@@ -23,8 +23,8 @@ public interface Constants {
     String LOGIN_URL = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
 
     String OTP_VERIFICATION = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String REQUEST_JOBS = "/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
     String SUB_STATUS_LIST_URL = "/get_sub_status.php";
-    String REQUEST_JOBS = "";
     String KEY = "key";
 
     public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, SUB_STATUS_LIST}

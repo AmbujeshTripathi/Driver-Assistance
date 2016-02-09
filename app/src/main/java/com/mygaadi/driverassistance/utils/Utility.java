@@ -224,7 +224,6 @@ public class Utility {
     //End implementation of custom dialog
 
 
-
     public static String isValidEmail(EditText email) {
         String userNameOrEmailStr = null;
         if (!TextUtils.isEmpty(email.getText().toString())) {
@@ -393,8 +392,6 @@ public class Utility {
     }
 
 
-
-
     /**
      * @param bundle
      * @param fragment
@@ -498,6 +495,20 @@ public class Utility {
             e.printStackTrace();
         }
         return srcDateStr;
+    }
+
+    public static Date getDateFromTime(String srcDateStr) {
+        Date date = null;
+        if (srcDateStr == null || srcDateStr.trim().equals(""))
+            return date;
+        try {
+            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+            date = srcDf.parse(srcDateStr);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
 
