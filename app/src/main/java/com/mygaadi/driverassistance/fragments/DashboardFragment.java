@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mygaadi.driverassistance.R;
@@ -26,6 +27,7 @@ import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +50,9 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     private DateStripController mDateStripController;
     private JobModelAdapter customAdapter;
     private String dateSelected;
+    private TextView noDataView;
     JobListModel jobListModel;
+    List<JobDetail> resultSet;
     String[] values = {"a", "a", "v"};
 
     public DashboardFragment() {
@@ -62,6 +66,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         // Inflate the layout for this fragment
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        noDataView = (TextView) rootView.findViewById(R.id.noDataLayout);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         this.mDateStripController = new DateStripController((MainActivity) getActivity(), this);
@@ -110,7 +115,10 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         if (jobListModel.getStatus()) {
             if ((jobListModel.getData().size() == 0) || (jobListModel.getData() == null)) {
                 Toast.makeText(getActivity(), jobListModel.getMessage(), Toast.LENGTH_SHORT).show();
+                noDataView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
             } else {
+                mRecyclerView.setVisibility(View.VISIBLE);
                 Collections.sort(jobListModel.getData(), new Comparator<JobDetail>() {
                     @Override
                     public int compare(JobDetail lhs, JobDetail rhs) {
@@ -154,16 +162,23 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     }
 
     private void initData(List<JobDetail> data) {
+        if (resultSet == null) {
+            resultSet = new ArrayList<>();
+        }
+        resultSet.addAll(data);
         if (customAdapter == null) {
             customAdapter = new JobModelAdapter(getActivity(), data, this);
             mRecyclerView.setAdapter(customAdapter);
+        } else {
+            customAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onItemClick(int position) {
-        if (position == 1) {
-            if (UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Constants.IS_SELFIE_UPLOADED)) {
+    public void onItemClick(View view, int position) {
+        if (position == 0) {
+            if (view.getId() == R.id.start_job) {
+                //             if (UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Constants.IS_SELFIE_UPLOADED)) {
                 JobDetail item = jobListModel.getData().get(position);
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.CUSTOMER_ADDRESS, item.getCustomerLocality());
@@ -172,11 +187,13 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
                 bundle.putString(Constants.START_TIME, item.getStartTime());
                 bundle.putString(Constants.END_TIME, item.getEndTime());
                 Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
-            } else {
-
-
+//                } else {
+//
+//
+//                }
+            } else if (view.getId() == R.id.cancel_job) {
+                //Todo cancel job api implement
             }
-
 
         }
     }
