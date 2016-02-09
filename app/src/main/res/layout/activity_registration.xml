@@ -62,7 +62,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/dimen_three"
             android:layout_marginTop="@dimen/dimen_ten"
-            android:background="@drawable/lets_go"
+            android:background="@drawable/button_bg_selector"
             android:text="@string/ph_register" />
     </LinearLayout>
 

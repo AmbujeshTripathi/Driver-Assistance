@@ -23,7 +23,7 @@ public interface Constants {
     String LOGIN_URL = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
 
     String OTP_VERIFICATION = "/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
-    String SUB_STATUS_LIST_URL = "/get_sub_status.php";
+    String SUB_STATUS_LIST_URL = "/api_dummy/get_sub_status.php";
     String REQUEST_JOBS = "";
     String KEY = "key";
 

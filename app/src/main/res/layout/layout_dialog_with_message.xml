@@ -73,18 +73,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_bg"
+                    android:background="@drawable/button_bg_selector"
                     android:text="@string/R.string.cancel"
                     android:textColor="@color/White"
                     android:textSize="20sp" />
 
                 <Button
-                    android:id="@+id/submitButton"
+                    android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_bg"
+                    android:background="@drawable/button_bg_selector"
                     android:text="@string/save"
                     android:textColor="@color/White"
                     android:textSize="20sp" />

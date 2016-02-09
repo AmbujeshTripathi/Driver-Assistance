@@ -68,7 +68,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phone_number_registration);
+        setContentView(R.layout.activity_registration);
         showNoInternetConnectionDialog(this);
 
         initViews();

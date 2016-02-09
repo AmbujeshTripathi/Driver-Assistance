@@ -1,1 +1,1 @@
-include ':app',':CalenderViewPagerLibrary'
+include ':app',':CalenderViewPagerLibrary', ':ImageLibrary'

@@ -1,7 +1,6 @@
 package com.mygaadi.driverassistance.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +24,6 @@ import retrofit.client.Response;
  */
 public class SplashActivity extends AppCompatActivity implements RestCallback {
     private ImageView splashImage;
-    private AnimationDrawable anim;
-    private Handler handler;
     private Runnable r;
     private int splashMipMaps[] = new int[]{R.mipmap.splash_frame_01, R.mipmap.splash_frame_02, R.mipmap.splash_frame_03,
             R.mipmap.splash_frame_04, R.mipmap.splash_frame_05, R.mipmap.splash_frame_06,

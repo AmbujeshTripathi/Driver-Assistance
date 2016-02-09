@@ -1,8 +1,11 @@
 package com.mygaadi.driverassistance.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.activity.MainActivity;
@@ -36,10 +40,12 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
     public static final String TAG = "StatusUpdateFragment";
     private static final java.lang.String IS_PICK_UP = "isPickUpJob";
+    private static final int CAPTURE_IMAGE = 101;
     private ViewGroup rootView;
     private LinearLayout linearLayoutStatus;
     private List<SubStatusListModel.SubStatusModel> subStatusList;
     private boolean isPickUpJob;
+    private ImageView imageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,8 +85,8 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     }
 
     private void setUpViews() {
-
         linearLayoutStatus = (LinearLayout) rootView.findViewById(R.id.layoutStatus);
+        rootView.findViewById(R.id.btnUpdateStatus).setOnClickListener(this);
     }
 
 
@@ -118,12 +124,12 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         int size = list.size();
         for (int i = 0; i < size; i++) {
             View childView = LayoutInflater.from(getActivity()).inflate(R.layout.status_update_item, null);
-            ((ImageView)childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open);
+            ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open);
             ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(i).getSubStatusName());
-            childView.setId(i);
-            childView.setOnClickListener(this);
+//            childView.setId(i);
+//            childView.setOnClickListener(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 10, 0, 5);
+            layoutParams.setMargins(0, 5, 0, 5);
             linearLayoutStatus.addView(childView, layoutParams);
         }
     }
@@ -132,6 +138,8 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnUpdateStatus:
+//                showDialogToUpdateStatus(0);
+                showDialogToUpLoadImage(0);
                 break;
 
             default:
@@ -141,6 +149,9 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     }
 
     private void showDialogToUpdateStatus(int id) {
+        if ((subStatusList.size() - 1) < id) {
+            return;
+        }
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(id);
 
         final Dialog dialog = Utility.getDialog(getActivity(), R.layout.layout_dialog_with_message);
@@ -148,7 +159,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
         ((TextView) dialog.findViewById(R.id.tvMessage)).setText(subStatusModel.getDialog());
         final EditText enterComment = (EditText) dialog.findViewById(R.id.enterComment);
-        Button btSubmit = (Button) dialog.findViewById(R.id.submitButton);
+        Button btSubmit = (Button) dialog.findViewById(R.id.btnSave);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,5 +180,74 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
         dialog.show();
     }
+
+
+    private void showDialogToUpLoadImage(int index) {
+
+
+        {
+            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction ft = fragmentManager.beginTransaction();
+            Fragment prev = fragmentManager.findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+
+            DialogFragment newFragment = new CaptureImageFragment();
+            newFragment.setTargetFragment(this, CAPTURE_IMAGE);
+            newFragment.show(ft, "dialog");
+        }
+
+//        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
+//
+//        final Dialog dialog = Utility.getDialog(getActivity(), R.layout.dialog_capture_image);
+//        View btnBack = dialog.findViewById(R.id.btnBack);
+//
+//        Button btSubmit = (Button) dialog.findViewById(R.id.btnSave);
+//
+//        btnBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        btSubmit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    dialog.dismiss();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//
+//        imageView = (ImageView) dialog.findViewById(R.id.imgCapturedImage);
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openCamera(CAPTURE_IMAGE);
+//            }
+//        });
+//
+//
+//        dialog.show();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case CAPTURE_IMAGE:
+                    String hell = data.getStringExtra("Hell");
+                    Toast.makeText(getActivity(), "" + hell, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
+
 
 }

@@ -47,5 +47,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
-
+    compile project(':ImageLibrary')
 }

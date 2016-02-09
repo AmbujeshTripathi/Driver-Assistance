@@ -7,3 +7,8 @@
 *.aar
 *.iml
 *.jar
+
+CalenderViewPagerLibrary/build
+
+ImageLibrary/build
+
