@@ -46,6 +46,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private List<SubStatusListModel.SubStatusModel> subStatusList;
     private boolean isPickUpJob;
     private ImageView imageView;
+    private String mJobId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,21 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
     private void setDataOnViews() {
 
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            return;
+        }
+        String customerAddress = bundle.getString(Constants.CUSTOMER_ADDRESS);
+        ((TextView) rootView.findViewById(R.id.tvAddressPickup)).setText(customerAddress);
 
+        String hubAddress = bundle.getString(Constants.HUB_ADDRESS);
+        ((TextView) rootView.findViewById(R.id.tvAddressDropOff)).setText(hubAddress);
+
+        String startTime = bundle.getString(Constants.START_TIME);
+        ((TextView) rootView.findViewById(R.id.tvTime)).setText(startTime);
+
+//        String endTime = bundle.getString(Constants.END_TIME);
+        mJobId = bundle.getString(Constants.JOB_ID);
     }
 
     private void setUpViews() {

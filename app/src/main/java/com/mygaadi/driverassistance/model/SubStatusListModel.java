@@ -72,10 +72,10 @@ public class SubStatusListModel extends Model {
 
     public class SubStatusModel {
 
-        @SerializedName("sub_status_id")
+        @SerializedName("substatus_id")
         @Expose
         private String subStatusId;
-        @SerializedName("sub_status_name")
+        @SerializedName("substatus_name")
         @Expose
         private String subStatusName;
         @SerializedName("status_id")

@@ -29,7 +29,6 @@ public interface RestService {
     @GET(Constants.REQUEST_JOBS)
     void getJobs(@QueryMap Map<String, String> map, MyCallback<JobListModel> callback);
 
-    @FormUrlEncoded
-    @POST(Constants.SUB_STATUS_LIST_URL)
-    void getSubStatusList(@FieldMap HashMap<String, String> map, MyCallback<SubStatusListModel> cb);
+    @GET(Constants.SUB_STATUS_LIST_URL)
+    void getSubStatusList(@QueryMap HashMap<String, String> map, MyCallback<SubStatusListModel> cb);
 }
