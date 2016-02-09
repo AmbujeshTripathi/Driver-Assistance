@@ -28,7 +28,7 @@ public interface Constants {
 
     String OTP_VERIFICATION = "/save/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
     String REQUEST_JOBS = "/fetch/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
-    String SUB_STATUS_LIST_URL = "/get_sub_status.php";
+    String SUB_STATUS_LIST_URL = "/fetch/get_sub_status?key=46a94e1a05ab04758d9b4597b5e375a2";
     String KEY = "key";
 
     public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, SUB_STATUS_LIST}
