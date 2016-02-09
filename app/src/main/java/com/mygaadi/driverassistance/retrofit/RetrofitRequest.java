@@ -1,7 +1,7 @@
 package com.mygaadi.driverassistance.retrofit;
 
 import com.mygaadi.driverassistance.MyApplication;
-import com.mygaadi.driverassistance.model.DealerLoginModel;
+import com.mygaadi.driverassistance.model.DriverLoginModel;
 import com.mygaadi.driverassistance.model.JobDetailModel;
 import com.mygaadi.driverassistance.model.OtpModel;
 import com.mygaadi.driverassistance.model.SubStatusListModel;
@@ -21,7 +21,7 @@ public class RetrofitRequest {
     }
 
 
-    public static void otpVerification(HashMap<String, String> map, MyCallback<DealerLoginModel> cb) {
+    public static void otpVerification(HashMap<String, String> map, MyCallback<DriverLoginModel> cb) {
         restService.otpVerification(map, cb);
     }
 

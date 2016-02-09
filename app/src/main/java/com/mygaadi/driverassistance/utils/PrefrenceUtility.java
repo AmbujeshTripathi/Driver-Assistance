@@ -114,7 +114,7 @@ public class PrefrenceUtility {
     }
 
     public static String getUserIdFromSharedPreference() {
-        return String.valueOf(sharedPreferences.getInt(Constants.USERID, 0));
+        return String.valueOf(sharedPreferences.getInt(Constants.USER_ID, 0));
     }
 
     public static SharedPreferences getInsurerSharedPreferences() {

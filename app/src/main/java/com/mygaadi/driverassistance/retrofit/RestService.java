@@ -2,7 +2,7 @@ package com.mygaadi.driverassistance.retrofit;
 
 
 import com.mygaadi.driverassistance.constants.Constants;
-import com.mygaadi.driverassistance.model.DealerLoginModel;
+import com.mygaadi.driverassistance.model.DriverLoginModel;
 import com.mygaadi.driverassistance.model.JobDetailModel;
 import com.mygaadi.driverassistance.model.OtpModel;
 import com.mygaadi.driverassistance.model.SubStatusListModel;
@@ -17,13 +17,13 @@ import retrofit.http.POST;
 
 public interface RestService {
     @FormUrlEncoded
-    @POST(Constants.DEALER_LOGIN)
+    @POST(Constants.LOGIN_URL)
     void OtpReceiver(@FieldMap Map<String, String> map,
                      MyCallback<OtpModel> callback);
 
     @FormUrlEncoded
     @POST(Constants.OTP_VERIFICATION)
-    void otpVerification(@FieldMap Map<String, String> map, MyCallback<DealerLoginModel> callback);
+    void otpVerification(@FieldMap Map<String, String> map, MyCallback<DriverLoginModel> callback);
 
     @GET(Constants.REQUEST_JOBS)
     void getJobs(@FieldMap Map<String, String> map, MyCallback<JobDetailModel> callback);

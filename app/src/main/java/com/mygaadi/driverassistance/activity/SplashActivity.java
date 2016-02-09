@@ -221,7 +221,7 @@ public class SplashActivity extends AppCompatActivity implements RestCallback {
            /* r = new Runnable() {
                 @Override
                 public void run() {
-                    if(UtilitySingleton.getInstance(getApplicationContext()).getStringFromSharedPref(Constants.USERID) == null) {
+                    if(UtilitySingleton.getInstance(getApplicationContext()).getStringFromSharedPref(Constants.USER_ID) == null) {
                         startActivity(new Intent(SplashActivity.this, ActivityRegistration.class));
                     }
                     else{
@@ -267,7 +267,7 @@ public class SplashActivity extends AppCompatActivity implements RestCallback {
             r = new Runnable() {
                 @Override
                 public void run() {
-                    String userId = UtilitySingleton.getInstance(getApplicationContext()).getStringFromSharedPref(Constants.USERID);
+                    String userId = UtilitySingleton.getInstance(getApplicationContext()).getStringFromSharedPref(Constants.USER_ID);
                     if (userId == null || userId.equals("")) {
                         startActivity(new Intent(SplashActivity.this, ActivityRegistration.class));
                     } else {

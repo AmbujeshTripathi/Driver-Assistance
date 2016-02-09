@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.custom_view.CustomGearDialog;
-import com.mygaadi.driverassistance.model.DealerLoginModel;
+import com.mygaadi.driverassistance.model.DriverLoginModel;
 import com.mygaadi.driverassistance.model.OtpModel;
 import com.mygaadi.driverassistance.recievers.SmsReaderReceiver;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
@@ -41,8 +41,8 @@ import retrofit.client.Response;
 /**
  * Created by Ambujesh on 6/19/2015.
  */
-public class ActivityRegistration extends AppCompatActivity implements  View.OnClickListener,
-        RestCallback, SmsReaderReceiver.SmsCallback  {
+public class ActivityRegistration extends AppCompatActivity implements View.OnClickListener,
+        RestCallback, SmsReaderReceiver.SmsCallback {
 
     private final int LOCATION_DB_TASK = 1101;
     private final int MAKE_MODAL_DB_TASK = 1102;
@@ -53,7 +53,7 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
     private Dialog mOtpDialog;
     private AlertDialog.Builder alertDialog;
     private OtpModel otpModel;
-    private DealerLoginModel dealerLoginModel;
+    private DriverLoginModel dealerLoginModel;
     private boolean result;
     TextView txtResendOtp, resendMessage;
     //Progress dialog
@@ -246,17 +246,19 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
                 requestOtp("Resending OTP..");
                 break;
             case R.id.btn_verify:
-                if (edtOtpCode.getText().toString().equals("")) {
+                String otpEntered = edtOtpCode.getText().toString();
+                if (otpEntered.equals("")) {
                     Utility.showToast(this, "Please enter OTP");
                     return;
                 }
                 HashMap<String, String> params = new HashMap<>();
+
                 params.put(Constants.KEY_MOBILE, etMobileNumber.getText().toString());
-//                params.put(GlobalVariables.KEY_OTPID, otp);
-                params.put(Constants.KEY_OTPCODE, edtOtpCode.getText().toString());
+                params.put(Constants.KEY, "46a94e1a05ab04758d9b4597b5e375a2");
+                params.put(Constants.KEY_OTP_CODE, otpEntered);
 
                 startProgress("Verifying OTP..");
-                RetrofitRequest.otpVerification(params, new MyCallback<DealerLoginModel>(this, this, false, null, "Loading...",
+                RetrofitRequest.otpVerification(params, new MyCallback<DriverLoginModel>(this, this, false, null, "Loading...",
                         Constants.SERVICE_MODE.OTP_VERIFICATION));
                 break;
             default:
@@ -267,9 +269,10 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
     private void requestOtp(String msg) {
         if (isFieldsHaveValue()) {
             if (isFieldValid()) {
-                HashMap<String, String> mParams = new HashMap<String, String>();
-                mParams.put(Constants.KEY_MOBILE, etMobileNumber.getText().toString());
-                RetrofitRequest.OtpReceiver(mParams, new MyCallback<OtpModel>(this, this, true, null, msg,
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Constants.KEY_MOBILE, etMobileNumber.getText().toString());
+                params.put(Constants.KEY, "46a94e1a05ab04758d9b4597b5e375a2");
+                RetrofitRequest.OtpReceiver(params, new MyCallback<OtpModel>(this, this, true, null, msg,
                         Constants.SERVICE_MODE.OTP_RECEIVE));
             }
         }
@@ -365,12 +368,12 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
 
 
             case OTP_VERIFICATION:
-                dealerLoginModel = (DealerLoginModel) model;
-                if ((((DealerLoginModel) model).getStatus())) {
+                dealerLoginModel = (DriverLoginModel) model;
+                if ((((DriverLoginModel) model).getStatus())) {
                     {
                         stopTimer();
                         mOtpDialog.dismiss();
-                        changeMessage("Fetching Data...");
+                        saveDataInSharedPref(this, dealerLoginModel);
                     }
 
 
@@ -387,29 +390,30 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
     }
 
 
-
-    private void saveDataInSharedPref(Context context, DealerLoginModel model) {
+    private void saveDataInSharedPref(Context context, DriverLoginModel model) {
 
         UtilitySingleton utilitySingleton = UtilitySingleton.getInstance(context);
 
-        DealerLoginModel.Data data = model.getData();
+        DriverLoginModel.Data data = model.getData();
         if (data == null) {
             return;
         }
-        utilitySingleton.saveStringInSharedPref(Constants.USERID, data.getUserId());
-        utilitySingleton.saveStringInSharedPref(Constants.USER_NAME, data.getFirstName());
+        utilitySingleton.saveStringInSharedPref(Constants.USER_ID, data.getUserId());
+        utilitySingleton.saveStringInSharedPref(Constants.USER_NAME, data.getName());
         utilitySingleton.saveStringInSharedPref(Constants.USER_EMAIL, data.getEmail());
         utilitySingleton.saveStringInSharedPref(Constants.USER_TOKEN, model.getUserToken());
 
         //Saving the data to the car insurance also
         //Constant file used is also belong to car insurance module
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USERID, data.getUserId());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_NAME, data.getFirstName());
+        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_ID, data.getUserId());
+        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_NAME, data.getName());
         PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_EMAIL, data.getEmail());
         PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_TOKEN, model.getUserToken());
 
-    }
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
 
+    }
 
 
     public void stopProgress() {
@@ -444,7 +448,6 @@ public class ActivityRegistration extends AppCompatActivity implements  View.OnC
             }
         }.start();
     }
-
 
 
 }

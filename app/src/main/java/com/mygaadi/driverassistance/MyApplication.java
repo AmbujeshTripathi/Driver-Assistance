@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.utils.FontOverrideUtils;
+import com.mygaadi.driverassistance.utils.UtilitySingleton;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -17,11 +18,8 @@ import retrofit.client.OkClient;
 public class MyApplication extends Application {
     private static MyApplication instance;
     private static RestAdapter restAdapter;
+    private static Context applicationContext;
 
-
-    public static MyApplication getInstance() {
-        return instance;
-    }
 
 
     @Override
@@ -32,13 +30,12 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //    if (!BuildConfig.IS_DEV_BUILD) //todo uncomment this in future.
         instance = this;
+        this.applicationContext = this;
         //Override application Font with roboto
         overrideFont();
 
     }
-
 
 
     /**
@@ -62,13 +59,13 @@ public class MyApplication extends Application {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-//              request.addHeader("x-auth-key ", "lms_service");
-//                request.addHeader("x-auth-apitoken", "wxThLeZoBXmKIDLeGsNeuuZwkhQqhGsXfI7ID5D1I1A=");
+                request.addHeader("x-auth-key ", "service_driver");
+                request.addHeader("x-auth-apitoken", "wxThLeZoBXmKIDLeGsNeuuZwkhQqhGsXfI7ID5D1I1A=");
 
-                //Adding required headers. If the value found then put the values other wise set with blank string
-//                Context context = MyApplication.getInstance().getApplicationContext();
-//                request.addHeader("x-auth-userid", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USERID, ""));
-//                request.addHeader("x-auth-usertoken", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USER_TOKEN, ""));
+//                Adding required headers. If the value found then put the values other wise set with blank string
+                Context context = applicationContext;
+//                request.addHeader("x-auth-userid", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USER_ID, ""));
+                request.addHeader("x-auth-usertoken", UtilitySingleton.getInstance(context).getStringFromSharedPref(Constants.USER_TOKEN, ""));
             }
         };
 

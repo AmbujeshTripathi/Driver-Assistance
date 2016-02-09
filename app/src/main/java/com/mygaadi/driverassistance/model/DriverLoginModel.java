@@ -7,7 +7,7 @@ package com.mygaadi.driverassistance.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DealerLoginModel extends Model {
+public class DriverLoginModel extends Model {
 
     @SerializedName("user-token")
     @Expose
@@ -51,21 +51,20 @@ public class DealerLoginModel extends Model {
         @SerializedName("user_id")
         @Expose
         private String userId;
-        @SerializedName("role_id")
-        @Expose
-        private String roleId;
         @SerializedName("status")
         @Expose
         private String status;
-        @SerializedName("first_name")
+        @SerializedName("name")
         @Expose
         private String firstName;
-        @SerializedName("last_name")
-        @Expose
-        private String lastName;
         @SerializedName("email")
         @Expose
         private String email;
+        @SerializedName("address")
+        @Expose
+        private String address;
+
+
 
         /**
          * @return The userId
@@ -81,19 +80,6 @@ public class DealerLoginModel extends Model {
             this.userId = userId;
         }
 
-        /**
-         * @return The roleId
-         */
-        public String getRoleId() {
-            return roleId;
-        }
-
-        /**
-         * @param roleId The role_id
-         */
-        public void setRoleId(String roleId) {
-            this.roleId = roleId;
-        }
 
         /**
          * @return The status
@@ -112,30 +98,17 @@ public class DealerLoginModel extends Model {
         /**
          * @return The firstName
          */
-        public String getFirstName() {
+        public String getName() {
             return firstName;
         }
 
         /**
          * @param firstName The first_name
          */
-        public void setFirstName(String firstName) {
+        public void setName(String firstName) {
             this.firstName = firstName;
         }
 
-        /**
-         * @return The lastName
-         */
-        public String getLastName() {
-            return lastName;
-        }
-
-        /**
-         * @param lastName The last_name
-         */
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
 
         /**
          * @return The email
@@ -151,5 +124,12 @@ public class DealerLoginModel extends Model {
             this.email = email;
         }
 
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
     }
 }
