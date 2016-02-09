@@ -48,6 +48,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     private DateStripController mDateStripController;
     private JobModelAdapter customAdapter;
     private String dateSelected;
+    JobListModel jobListModel;
     String[] values = {"a", "a", "v"};
 
     public DashboardFragment() {
@@ -77,6 +78,11 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     public void onDateSelected(String date) {
         dateSelected = date;
         Log.d(TAG, date);
+        try {
+            getJobDetailFromServer();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -100,7 +106,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     @Override
     public void onSuccess(Object model, Response response, Constants.SERVICE_MODE mode) {
-        JobListModel jobListModel = (JobListModel) model;
+        jobListModel = (JobListModel) model;
         if (jobListModel.getStatus()) {
             if ((jobListModel.getData().size() == 0) || (jobListModel.getData() == null)) {
                 Toast.makeText(getActivity(), jobListModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -149,7 +155,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     private void initData(List<JobDetail> data) {
         if (customAdapter == null) {
-            customAdapter = new JobModelAdapter(getActivity(), data,this);
+            customAdapter = new JobModelAdapter(getActivity(), data, this);
             mRecyclerView.setAdapter(customAdapter);
         }
     }
@@ -157,6 +163,20 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     @Override
     public void onItemClick(int position) {
         if (position == 1) {
+            if (UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Constants.IS_SELFIE_UPLOADED)) {
+                JobDetail item = jobListModel.getData().get(position);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.CUSTOMER_ADDRESS, item.getCustomerLocality());
+                bundle.putString(Constants.HUB_ADDRESS, item.getHubAddress());
+                bundle.putString(Constants.JOB_ID, item.getJobId());
+                bundle.putString(Constants.START_TIME, item.getStartTime());
+                bundle.putString(Constants.END_TIME, item.getEndTime());
+                Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
+            } else {
+
+
+            }
+
 
         }
     }
