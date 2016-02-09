@@ -20,6 +20,14 @@
             android:layout_height="match_parent"
             android:layoutAnimation="@anim/bottom_to_top" />
 
+        <TextView
+            android:id="@+id/noDataLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center"
+            android:text="No Records found."
+            android:textSize="25sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

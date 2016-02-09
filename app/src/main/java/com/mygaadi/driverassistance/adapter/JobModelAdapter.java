@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.mygaadi.driverassistance.R;
@@ -76,6 +77,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         TextView customerAddress;
         TextView hubAddress;
         TextView requestTime;
+        Button startJob, cancelJob;
 
 
         public CardViewHolder(View itemView) {
@@ -87,12 +89,17 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
             customerAddress = (TextView) itemView.findViewById(R.id.customer_address);
             hubAddress = (TextView) itemView.findViewById(R.id.service_address);
             customerName = (TextView) itemView.findViewById(R.id.customer_name);
+            startJob = (Button) itemView.findViewById(R.id.start_job);
+            cancelJob = (Button) itemView.findViewById(R.id.cancel_job);
+            startJob.setOnClickListener(this);
+            cancelJob.setOnClickListener(this);
+
         }
 
         @Override
         public void onClick(View v) {
 
-            onItemClickListener.onItemClick(this.getAdapterPosition());
+            onItemClickListener.onItemClick(v, this.getAdapterPosition());
 //            this.onItemClick(getAdapterPosition());
         }
 
@@ -104,7 +111,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(int position);
+        public void onItemClick(View view, int position);
     }
 
 }
