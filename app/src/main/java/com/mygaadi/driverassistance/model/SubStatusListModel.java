@@ -3,13 +3,14 @@ package com.mygaadi.driverassistance.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Ambujesh on 2/8/2016.
  */
-public class SubStatusListModel extends Model {
+public class SubStatusListModel extends Model implements Serializable{
 
     @SerializedName("data")
     @Expose
@@ -31,7 +32,7 @@ public class SubStatusListModel extends Model {
     }
 
 
-    public class Data {
+    public class Data  implements Serializable{
 
         @SerializedName("pickUp ")
         @Expose
@@ -70,7 +71,7 @@ public class SubStatusListModel extends Model {
 
     }
 
-    public class SubStatusModel {
+    public class SubStatusModel implements Serializable{
 
         @SerializedName("substatus_id")
         @Expose

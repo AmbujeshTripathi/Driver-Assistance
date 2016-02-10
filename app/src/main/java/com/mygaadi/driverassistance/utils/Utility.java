@@ -32,14 +32,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.custom_view.CustomGearDialog;
 import com.mygaadi.driverassistance.interfaces.OnInternetConnection;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit.client.Response;
 
 
 public class Utility {
@@ -511,5 +522,54 @@ public class Utility {
         return date;
     }
 
+
+    public static void makeToast(Context appContext, String message) {
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    public static String getResponse(Response response) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonParser jp = new JsonParser();
+            JsonElement je = jp.parse(convertStreamToString(response.getBody().in()));
+            return gson.toJson(je);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            try {
+                return convertStreamToString(response.getBody().in());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                return "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
 
 }

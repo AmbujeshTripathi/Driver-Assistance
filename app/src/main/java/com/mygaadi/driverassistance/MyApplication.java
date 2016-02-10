@@ -78,4 +78,8 @@ public class MyApplication extends Application {
 
         return restAdapter;
     }
+
+    public static Context getAppContext() {
+        return applicationContext;
+    }
 }

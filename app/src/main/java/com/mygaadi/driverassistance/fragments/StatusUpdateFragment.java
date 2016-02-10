@@ -16,16 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.activity.MainActivity;
 import com.mygaadi.driverassistance.constants.Constants;
+import com.mygaadi.driverassistance.model.Model;
 import com.mygaadi.driverassistance.model.SubStatusListModel;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
 import com.mygaadi.driverassistance.retrofit.RestCallback;
 import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
 import com.mygaadi.driverassistance.utils.Utility;
+import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +46,10 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private LinearLayout linearLayoutStatus;
     private List<SubStatusListModel.SubStatusModel> subStatusList;
     private boolean isPickUpJob;
-    private ImageView imageView;
     private String mJobId;
     private String mCustomerMobile;
+    private static int mCurrentIndex = 0;
+    private Dialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,27 +124,50 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
     @Override
     public void onSuccess(Object model, Response response, Constants.SERVICE_MODE mode) {
-        if (!mode.equals(Constants.SERVICE_MODE.SUB_STATUS_LIST)) {
-            Snackbar.make(getView(), " Unable yo get List at this moment . Please try again later", Snackbar.LENGTH_SHORT).show();
+        if (mode.equals(Constants.SERVICE_MODE.SUB_STATUS_LIST)) {
+            if (model == null) {
+                Snackbar.make(getView(), " Unable yo get List at this moment . Please try again later", Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+
+            SubStatusListModel subStatusListModel = (SubStatusListModel) model;
+            if (!subStatusListModel.getStatus()) {
+                Snackbar.make(getView(), subStatusListModel.getMessage(), Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            //TODO need to integrate the check to select any of two lists (Pick up or Drop)
+            if (isPickUpJob) {
+                subStatusList = subStatusListModel.getData().getPickUp();
+            } else {
+                subStatusList = subStatusListModel.getData().getDrop();
+            }
+            setStatusUpdateListOnViews(subStatusList);
             return;
         }
-        if (model == null) {
-            Snackbar.make(getView(), " Unable yo get List at this moment . Please try again later", Snackbar.LENGTH_SHORT).show();
-            return;
+        if (mode.equals(Constants.SERVICE_MODE.UPDATE_STATUS)) {
+            if (!(model instanceof Model)) {
+                return;
+            }
+            Model responseModel = (Model) model;
+            if (!responseModel.getStatus()) {
+                Snackbar.make(getView(), responseModel.getMessage(), Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            Snackbar.make(getView(), responseModel.getMessage(), Snackbar.LENGTH_SHORT).show();
+            mCurrentIndex = mCurrentIndex + 1;
+            updateStatusListOnViews();
         }
 
-        SubStatusListModel subStatusListModel = (SubStatusListModel) model;
-        if (!subStatusListModel.getStatus()) {
-            Snackbar.make(getView(), subStatusListModel.getMessage(), Snackbar.LENGTH_SHORT).show();
-            return;
+    }
+
+    private void updateStatusListOnViews() {
+        int childCount = linearLayoutStatus.getChildCount();
+        for (int i = 0; i < childCount && i < mCurrentIndex; i++) {
+            ((ImageView) linearLayoutStatus.getChildAt(i).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_done);
         }
-        //TODO need to integrate the check to select any of two lists (Pick up or Drop)
-        if (isPickUpJob) {
-            subStatusList = subStatusListModel.getData().getPickUp();
-        } else {
-            subStatusList = subStatusListModel.getData().getDrop();
+        if (childCount >= mCurrentIndex) {
+            ((ImageView) linearLayoutStatus.getChildAt(mCurrentIndex).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_in_progress);
         }
-        setStatusUpdateListOnViews(subStatusList);
     }
 
     private void setStatusUpdateListOnViews(List<SubStatusListModel.SubStatusModel> list) {
@@ -151,8 +176,6 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             View childView = LayoutInflater.from(getActivity()).inflate(R.layout.status_update_item, null);
             ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open);
             ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(i).getSubStatusName());
-//            childView.setId(i);
-//            childView.setOnClickListener(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 5, 0, 5);
             linearLayoutStatus.addView(childView, layoutParams);
@@ -163,8 +186,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnUpdateStatus:
-//                showDialogToUpdateStatus(0);
-                showDialogToUpLoadImage(0);
+                showDialogDependOnCase();
                 break;
 
             default:
@@ -173,13 +195,26 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         }
     }
 
-    private void showDialogToUpdateStatus(int id) {
-        if ((subStatusList.size() - 1) < id) {
+    private void showDialogDependOnCase() {
+        if ((subStatusList.size() - 1) < mCurrentIndex) {
             return;
         }
-        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(id);
+        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(mCurrentIndex);
+        if (subStatusModel.getSubStatusId() == "7" || subStatusModel.getSubStatusId() == "13") {
+            showDialogToUploadImage(mCurrentIndex);
+            return;
+        }
+        showDialogToUpdateStatus(mCurrentIndex);
 
-        final Dialog dialog = Utility.getDialog(getActivity(), R.layout.layout_dialog_with_message);
+    }
+
+    private void showDialogToUpdateStatus(final int index) {
+        if ((subStatusList.size() - 1) < index) {
+            return;
+        }
+        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
+
+        dialog = Utility.getDialog(getActivity(), R.layout.layout_dialog_with_message);
         View btnBack = dialog.findViewById(R.id.btnBack);
 
         ((TextView) dialog.findViewById(R.id.tvMessage)).setText(subStatusModel.getDialog());
@@ -196,6 +231,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             @Override
             public void onClick(View v) {
                 try {
+                    updateStatus(index, enterComment.getText().toString());
                     dialog.dismiss();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -206,10 +242,23 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         dialog.show();
     }
 
+    private void updateStatus(int index, String comment) {
+        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.USER_ID, UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID));
+        params.put(Constants.JOB_ID, mJobId);
+        params.put(Constants.KEY_STATUS_ID, subStatusModel.getStatusId());
+        params.put(Constants.KEY_SUB_STATUS_ID, subStatusModel.getSubStatusId());
+        params.put(Constants.KEY_COMMENT, comment);
+        params.put(Constants.KEY_DOC_ID, "");
+        params.put(Constants.KEY_LATITUDE, "");
+        params.put(Constants.KEY_LONGITUDE, "");
+        RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
+                Constants.SERVICE_MODE.UPDATE_STATUS));
+    }
 
-    private void showDialogToUpLoadImage(int index) {
 
-
+    private void showDialogToUploadImage(int index) {
         {
             android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -217,47 +266,16 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             if (prev != null) {
                 ft.remove(prev);
             }
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.JOB_ID, mJobId);
+            bundle.putSerializable(Constants.KEY_SUB_STATUS_MODEL, subStatusList.get(index));
 
             DialogFragment newFragment = new CaptureImageFragment();
+            newFragment.setArguments(bundle);
             newFragment.setTargetFragment(this, CAPTURE_IMAGE);
             newFragment.show(ft, "dialog");
         }
 
-//        SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
-//
-//        final Dialog dialog = Utility.getDialog(getActivity(), R.layout.dialog_capture_image);
-//        View btnBack = dialog.findViewById(R.id.btnBack);
-//
-//        Button btSubmit = (Button) dialog.findViewById(R.id.btnSave);
-//
-//        btnBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        btSubmit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    dialog.dismiss();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//
-//        imageView = (ImageView) dialog.findViewById(R.id.imgCapturedImage);
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openCamera(CAPTURE_IMAGE);
-//            }
-//        });
-//
-//
-//        dialog.show();
     }
 
 
@@ -267,12 +285,13 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case CAPTURE_IMAGE:
-                    String hell = data.getStringExtra("Hell");
-                    Toast.makeText(getActivity(), "" + hell, Toast.LENGTH_SHORT).show();
+                    boolean isUploadedSuccessfully = data.getBooleanExtra(CaptureImageFragment.IS_UPLOADED_SUCCESSFULLY, false);
+                    if (isUploadedSuccessfully) {
+                        mCurrentIndex = mCurrentIndex + 1;
+                        updateStatusListOnViews();
+                    }
                     break;
             }
         }
     }
-
-
 }

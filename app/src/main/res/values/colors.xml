@@ -103,4 +103,5 @@
 
     <color name="orange">#FE642E</color>
     <color name="documentImageBackground">#efefef</color>
+    <color name="holoBlue">#b703bcfa</color>
 </resources>

@@ -19,7 +19,16 @@ public interface Constants {
     String CUSTOMER_ADDRESS = "customer_address";
     String HUB_ADDRESS = "hub_address";
     String JOB_ID = "job_id";
-
+    String KEY = "key";
+    String KEY_LATITUDE = "latitude";
+    String KEY_LONGITUDE = "longitude";
+    String KEY_STATUS_ID = "statusId";
+    String KEY_SUB_STATUS_ID = "subStatusId";
+    String KEY_COMMENT = "comment";
+    String KEY_SUB_STATUS_MODEL = "subStatusModel";
+    String KEY_DOC_ID = "docId";
+    String UPLOAD_IMAGE = "uploadImage";
+    String DOC_TYPE = "docType";
 
     String APP_INSURER = "";
 
@@ -30,7 +39,10 @@ public interface Constants {
     String OTP_VERIFICATION = "/save/api_login?key=46a94e1a05ab04758d9b4597b5e375a2";
     String REQUEST_JOBS = "/fetch/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
     String SUB_STATUS_LIST_URL = "/fetch/get_sub_status?key=46a94e1a05ab04758d9b4597b5e375a2";
-    String KEY = "key";
+    String UPDATE_STATUS = "/save/job_conversation?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String JOB_CARD_UPLOAD_IMAGE_URL = "/save/image_upload?key=46a94e1a05ab04758d9b4597b5e375a2";
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, SUB_STATUS_LIST}
+
+    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, UPDATE_STATUS, UPLOAD_JOB_CARD, SUB_STATUS_LIST}
+
 }
