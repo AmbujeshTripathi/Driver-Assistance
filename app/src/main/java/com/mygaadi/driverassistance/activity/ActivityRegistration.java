@@ -73,9 +73,6 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
 
         initViews();
 
-        //Fetching latitudes and longitudes...
-        startService(new Intent("com.mygaadi.driverassistance.services.GPSTrackerService"));
-
         etMobileNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
