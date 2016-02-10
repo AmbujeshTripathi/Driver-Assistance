@@ -5,12 +5,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,7 +24,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.mygaadi.driverassistance.DBPackage.DatabaseVar.DriverLocationEntry;
+import com.mygaadi.driverassistance.constants.Constants;
+import com.mygaadi.driverassistance.providers.DriverContentProvider;
 import com.mygaadi.driverassistance.utils.Utility;
+import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
 /**
  * Created by Aditya on 2/8/2016.
@@ -39,11 +44,18 @@ public class GPSTrackerService extends Service {
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
     private boolean isGPSEnabled;
+    private AlertDialog alertDialog;
+    private static String latitude;
+    private static Location location;
+    private static String longitude;
 
     public void permissionGrantedMoveOn() {
         if (displayGpsStatus()) {
             fetchLocationThread();
         } else {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                alertDialog.dismiss();
+            }
             alertBox(activity, "GPS is OFF");
         }
     }
@@ -55,7 +67,6 @@ public class GPSTrackerService extends Service {
     public class LocalBinder extends Binder {
 
         public GPSTrackerService getService() {
-            // Return this instance of LocalService so clients can call public methods
             return GPSTrackerService.this;
         }
     }
@@ -78,10 +89,16 @@ public class GPSTrackerService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
-                if (displayGpsStatus())
+                if (displayGpsStatus()) {
+                    if (alertDialog != null && alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
                     fetchLocationThread();
-                else {
+                } else {
                     removeGpsListener();
+                    if (alertDialog != null && alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
                     alertBox(activity, "GPS is OFF");
                 }
             }
@@ -104,11 +121,21 @@ public class GPSTrackerService extends Service {
                 try {
                     Looper.prepare();//Initialize the current thread as a looper.
                     mCustomLocationListener = new CustomLocationListener();
-                    long minTime = 1000; // 0 seconds
+                    long minTime = 1000; // 60 seconds
                     float minDistance = 0; // distance in meters
-                    Log.v(TAG, "Using GPS provider");
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime,
-                            minDistance, mCustomLocationListener);
+//                    Criteria criteria = new Criteria();
+//                    criteria.setAccuracy(Criteria.ACCURACY_HIGH);
+//                    String bestProvider = locationManager.getBestProvider(criteria, false);
+                    if (Utility.isNetworkAvailable(activity)) {
+                        Log.v(TAG, "Using Network provider");
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime,
+                                minDistance, mCustomLocationListener);
+                    } else {
+                        Log.v(TAG, "Using GPS provider");
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime,
+                                minDistance, mCustomLocationListener);
+                    }
+//                    locationManager.requestLocationUpdates(bestProvider, 0, 1, mCustomLocationListener);
                     Looper.loop();
                 } catch (Exception ex) {
                     Utility.showToast(getApplicationContext(), "Exception in triggerService Thread");
@@ -119,7 +146,8 @@ public class GPSTrackerService extends Service {
     }
 
     private boolean checkAndAskForGPSPermissions() {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                /*&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
             return false;
@@ -136,12 +164,16 @@ public class GPSTrackerService extends Service {
             if (isGPSEnabled) {
                 fetchLocationThread();
             } else {
-                alertBox(activity, "GPS is OFF");
+                if (alertDialog != null && !alertDialog.isShowing()) {
+                    alertDialog.show();
+                } else {
+                    alertBox(activity, "GPS is OFF");
+                }
             }
         }
     }
 
-    public static void alertBox(final Context context, String title) {
+    public void alertBox(final Context context, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Your Device's GPS is Disable")
                 .setCancelable(false)
@@ -162,8 +194,8 @@ public class GPSTrackerService extends Service {
                                 ((Activity) context).finish();
                             }
                         });
-        AlertDialog alert = builder.create();
-        alert.show();
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private Boolean displayGpsStatus() {
@@ -175,12 +207,28 @@ public class GPSTrackerService extends Service {
         }
     }
 
+    private void saveLocationToDatabase(Location location) {
+        String longitude = "Longitude: " + location.getLongitude();
+        String latitude = "Latitude: " + location.getLatitude();
+        Log.v(TAG, longitude + " " + latitude);
+        GPSTrackerService.latitude = latitude;
+        GPSTrackerService.longitude = latitude;
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DriverLocationEntry.DRIVER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
+        values.put(DriverLocationEntry.LATITUDE, latitude);
+        values.put(DriverLocationEntry.LONGITUDE, longitude);
+        values.put(DriverLocationEntry.CREATED_AT, longitude);
+
+        getContentResolver().insert(DriverContentProvider.ALL_LOCATION_URI, values);
+    }
+
     private class CustomLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            String longitude = "Longitude: " + location.getLongitude();
-            String latitude = "Latitude: " + location.getLatitude();
-            Log.v(TAG, longitude + " " + latitude);
+            //Save to location to database...
+            saveLocationToDatabase(location);
         }
 
         @Override
