@@ -158,28 +158,38 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             }
             Snackbar.make(getView(), responseModel.getMessage(), Snackbar.LENGTH_SHORT).show();
             mCurrentIndex = mCurrentIndex + 1;
-            updateStatusListOnViews();
+            updateListOfStatusViews();
         }
 
     }
 
-    private void updateStatusListOnViews() {
+    private void updateListOfStatusViews() {
         int childCount = linearLayoutStatus.getChildCount();
         for (int i = 0; i < childCount && i < mCurrentIndex; i++) {
             ((ImageView) linearLayoutStatus.getChildAt(i).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_done);
         }
         if (childCount - 1 >= mCurrentIndex) {
             ((ImageView) linearLayoutStatus.getChildAt(mCurrentIndex).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_in_progress);
+            return;
         }
 
-        if (mCurrentIndex >= childCount - 1) {
+        if (mCurrentIndex > childCount - 1) {
+            mCurrentIndex = 0;
             getActivity().getSupportFragmentManager().popBackStackImmediate();
         }
     }
 
     private void setStatusUpdateListOnViews(List<SubStatusListModel.SubStatusModel> list) {
         int size = list.size();
-        for (int i = 0; i < size; i++) {
+        if (size > 0) {
+            View childView = LayoutInflater.from(getActivity()).inflate(R.layout.status_update_item, null);
+            ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_in_progress);
+            ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(0).getSubStatusName());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 5, 0, 5);
+            linearLayoutStatus.addView(childView, layoutParams);
+        }
+        for (int i = 1; i < size; i++) {
             View childView = LayoutInflater.from(getActivity()).inflate(R.layout.status_update_item, null);
             ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open);
             ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(i).getSubStatusName());
@@ -299,7 +309,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
                     boolean isUploadedSuccessfully = data.getBooleanExtra(CaptureImageFragment.IS_UPLOADED_SUCCESSFULLY, false);
                     if (isUploadedSuccessfully) {
                         mCurrentIndex = mCurrentIndex + 1;
-                        updateStatusListOnViews();
+                        updateListOfStatusViews();
                     }
                     break;
             }
