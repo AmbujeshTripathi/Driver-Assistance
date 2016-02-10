@@ -3,6 +3,7 @@ package com.mygaadi.driverassistance.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -26,6 +27,7 @@ import com.mygaadi.driverassistance.model.SubStatusListModel;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
 import com.mygaadi.driverassistance.retrofit.RestCallback;
 import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
+import com.mygaadi.driverassistance.services.GPSTrackerService;
 import com.mygaadi.driverassistance.utils.Utility;
 import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
@@ -259,8 +261,9 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         params.put(Constants.KEY_SUB_STATUS_ID, subStatusModel.getSubStatusId());
         params.put(Constants.KEY_COMMENT, comment);
         params.put(Constants.KEY_DOC_ID, "");
-        params.put(Constants.KEY_LATITUDE, "");
-        params.put(Constants.KEY_LONGITUDE, "");
+        Location location = GPSTrackerService.location;
+        params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
+        params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
         RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
                 Constants.SERVICE_MODE.UPDATE_STATUS));
     }
