@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,8 +166,12 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         for (int i = 0; i < childCount && i < mCurrentIndex; i++) {
             ((ImageView) linearLayoutStatus.getChildAt(i).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_done);
         }
-        if (childCount >= mCurrentIndex) {
+        if (childCount - 1 >= mCurrentIndex) {
             ((ImageView) linearLayoutStatus.getChildAt(mCurrentIndex).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_in_progress);
+        }
+
+        if (mCurrentIndex >= childCount - 1) {
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
         }
     }
 
@@ -196,11 +201,14 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     }
 
     private void showDialogDependOnCase() {
+        Log.d(TAG, "mCurrentIndex  =  " + mCurrentIndex);
         if ((subStatusList.size() - 1) < mCurrentIndex) {
             return;
         }
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(mCurrentIndex);
-        if (subStatusModel.getSubStatusId() == "7" || subStatusModel.getSubStatusId() == "13") {
+        String subStatusId = subStatusModel.getSubStatusId().trim();
+        Log.d(TAG, "subStatusId = " + subStatusId);
+        if (subStatusId.equals("7") || subStatusId.equals("13")) {
             showDialogToUploadImage(mCurrentIndex);
             return;
         }
@@ -231,7 +239,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             @Override
             public void onClick(View v) {
                 try {
-                    updateStatus(index, enterComment.getText().toString());
+                    updateStatusOnServer(index, enterComment.getText().toString());
                     dialog.dismiss();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -242,7 +250,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         dialog.show();
     }
 
-    private void updateStatus(int index, String comment) {
+    private void updateStatusOnServer(int index, String comment) {
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.USER_ID, UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID));

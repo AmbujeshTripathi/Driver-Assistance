@@ -18,7 +18,7 @@ public interface Constants {
     String IS_SELFIE_UPLOADED = "is_selfie_uploaded";
     String CUSTOMER_ADDRESS = "customer_address";
     String HUB_ADDRESS = "hub_address";
-    String JOB_ID = "job_id";
+    String JOB_ID = "jobId";
     String KEY = "key";
     String KEY_LATITUDE = "latitude";
     String KEY_LONGITUDE = "longitude";
