@@ -3,23 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:elevation="5dp"
     android:translationZ="5dp"
     app:cardCornerRadius="5dp"
-    app:cardElevation="4dp">
+    app:cardElevation="5dp"
+    app:contentPadding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/request_time"
@@ -43,41 +42,79 @@
             android:id="@+id/layout_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="3">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/customer_name"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:text="Ram Mohan" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/customer_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:text="999999999" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-                <TextView
-                    android:id="@+id/customer_email"
+                        android:src="@drawable/ic_account_circle" />
+
+                    <TextView
+                        android:id="@+id/customer_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:padding="4dp"
+                        android:text="Ram Mohan" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_phone" />
+
+                    <TextView
+                        android:id="@+id/customer_mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="999999999" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:text="ram@abc.com" />
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_mail" />
+
+                    <TextView
+                        android:id="@+id/customer_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="ram@abc.com" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/call_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -94,7 +131,7 @@
             android:id="@+id/customer_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+
             android:orientation="vertical">
 
             <LinearLayout
@@ -143,7 +180,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/start_job"
