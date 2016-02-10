@@ -3,16 +3,21 @@ package com.mygaadi.driverassistance.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.model.JobDetail;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -44,6 +49,12 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.customerNumber.setText(jobDetailModel.getCustomerMobile());
         holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
         holder.hubAddress.setText(jobDetailModel.getHubAddress());
+        try {
+            if ((position == 0) && (checkTimeGap(jobDetailModel.getStartTime())))
+                holder.buttonLayout.setVisibility(View.VISIBLE);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -69,7 +80,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
 
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener {
 
         TextView customerName;
         TextView customerEmail;
@@ -78,6 +89,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         TextView hubAddress;
         TextView requestTime;
         Button startJob, cancelJob;
+        LinearLayout buttonLayout, call_layout;
 
 
         public CardViewHolder(View itemView) {
@@ -91,8 +103,12 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
             customerName = (TextView) itemView.findViewById(R.id.customer_name);
             startJob = (Button) itemView.findViewById(R.id.start_job);
             cancelJob = (Button) itemView.findViewById(R.id.cancel_job);
+            buttonLayout = (LinearLayout) itemView.findViewById(R.id.button_layout);
+            call_layout = (LinearLayout) itemView.findViewById(R.id.call_layout);
+            call_layout.setOnTouchListener(this);
             startJob.setOnClickListener(this);
             cancelJob.setOnClickListener(this);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -104,6 +120,14 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         }
 
 
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (v.getId() == R.id.call_layout) {
+                event.getX();
+
+            }
+            return true;
+        }
     }
 
     public void addAll(List<JobDetail> data) {
@@ -114,4 +138,13 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         public void onItemClick(View view, int position);
     }
 
+    private boolean checkTimeGap(String startTime) throws ParseException {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = dateFormatGmt.parse(startTime);
+        Date nowDate = new Date();
+        long diff = nowDate.getTime() - date.getTime();
+        int days = (int) (diff / (1000 * 60 * 60 * 24));
+        int hours = (int) ((diff - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+        return (hours > 2);
+    }
 }

@@ -1,7 +1,13 @@
 package com.mygaadi.driverassistance.fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,13 +24,17 @@ import com.mygaadi.driverassistance.constants.Constants;
 import com.mygaadi.driverassistance.listeners.OnDateStripActionListener;
 import com.mygaadi.driverassistance.model.JobDetail;
 import com.mygaadi.driverassistance.model.JobListModel;
+import com.mygaadi.driverassistance.model.Model;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
 import com.mygaadi.driverassistance.retrofit.RestCallback;
 import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
+import com.mygaadi.driverassistance.retrofit.UploadCallback;
 import com.mygaadi.driverassistance.utils.DateStripController;
 import com.mygaadi.driverassistance.utils.Utility;
 import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +43,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -52,8 +63,12 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     private String dateSelected;
     private TextView noDataView;
     JobListModel jobListModel;
-    List<JobDetail> resultSet;
+    List<JobDetail> resultSet, filterSet;
     String[] values = {"a", "a", "v"};
+    static final int REQUEST_TAKE_PHOTO = 1;
+    String mCurrentPhotoPath;
+    Date lastUpdatedDate;
+    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -72,12 +87,19 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         this.mDateStripController = new DateStripController((MainActivity) getActivity(), this);
         mDateStripController.initialize(rootView);
         try {
+
+            String dateUpdatedValue = UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.IS_SELFIE_UPLOADED);
+            if ((dateUpdatedValue == null) || (checkUpdatedDate(dateUpdatedValue))) {
+                showDialogForSelfie("Please upload selfie first");
+            }
             getJobDetailFromServer();
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return rootView;
     }
+
 
     @Override
     public void onDateSelected(String date) {
@@ -106,28 +128,37 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     @Override
     public void onFailure(RetrofitError e, Constants.SERVICE_MODE mode) {
+        if (mode == Constants.SERVICE_MODE.UPLOAD_SELFIE) {
 
+        }
     }
 
     @Override
     public void onSuccess(Object model, Response response, Constants.SERVICE_MODE mode) {
-        jobListModel = (JobListModel) model;
-        if (jobListModel.getStatus()) {
-            if ((jobListModel.getData().size() == 0) || (jobListModel.getData() == null)) {
-                Toast.makeText(getActivity(), jobListModel.getMessage(), Toast.LENGTH_SHORT).show();
-                noDataView.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.GONE);
-            } else {
-                mRecyclerView.setVisibility(View.VISIBLE);
-                Collections.sort(jobListModel.getData(), new Comparator<JobDetail>() {
-                    @Override
-                    public int compare(JobDetail lhs, JobDetail rhs) {
-                        return ((Utility.getDateFromTime(lhs.getStartTime())).compareTo(Utility.getDateFromTime(rhs.getStartTime())));
-                    }
-                });
-                initData(jobListModel.getData());
-            }
+        if (mode == Constants.SERVICE_MODE.GET_JOBS) {
+            jobListModel = (JobListModel) model;
+            if (jobListModel.getStatus()) {
+                if ((jobListModel.getData().size() == 0) || (jobListModel.getData() == null)) {
+                    Toast.makeText(getActivity(), jobListModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    noDataView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    filterData(jobListModel.getData());
+                    Collections.sort(filterSet, new Comparator<JobDetail>() {
+                        @Override
+                        public int compare(JobDetail lhs, JobDetail rhs) {
+                            return ((Utility.getDateFromTime(lhs.getStartTime())).compareTo(Utility.getDateFromTime(rhs.getStartTime())));
+                        }
+                    });
+                    initData();
+                }
 
+            }
+        } else if (mode == Constants.SERVICE_MODE.UPLOAD_SELFIE) {
+            Toast.makeText(getActivity(), "Selfie uploaded", Toast.LENGTH_SHORT).show();
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
+            UtilitySingleton.getInstance(getActivity()).saveStringInSharedPref(Constants.IS_SELFIE_UPLOADED, dateFormatGmt.format(new Date()).toString());
         }
 
 
@@ -145,7 +176,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     }
 
     private String getEndTime() throws ParseException {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
+
         SimpleDateFormat resultDateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -161,12 +192,12 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     }
 
-    private void initData(List<JobDetail> data) {
+    private void initData() {
         if (resultSet == null) {
             resultSet = new ArrayList<>();
         }
         resultSet.clear();
-        resultSet.addAll(data);
+        resultSet.addAll(filterSet);
 
         customAdapter = new JobModelAdapter(getActivity(), resultSet, this);
         mRecyclerView.setAdapter(customAdapter);
@@ -176,27 +207,118 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     @Override
     public void onItemClick(View view, int position) {
-        if (position == 0) {
-            if (view.getId() == R.id.start_job) {
-                //             if (UtilitySingleton.getInstance(getActivity()).getBooleanFromSharedPref(Constants.IS_SELFIE_UPLOADED)) {
-                JobDetail item = jobListModel.getData().get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.CUSTOMER_ADDRESS, item.getCustomerLocality());
-                bundle.putString(Constants.HUB_ADDRESS, item.getHubAddress());
-                bundle.putString(Constants.JOB_ID, item.getJobId());
-                bundle.putString(Constants.START_TIME, item.getStartTime());
-                bundle.putString(Constants.END_TIME, item.getEndTime());
-                bundle.putString(Constants.KEY_MOBILE, item.getCustomerMobile());
-                bundle.putString(Constants.JOB_TYPE, item.getJobType());
-                Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
-//                } else {
-//
-//
-//                }
-            } else if (view.getId() == R.id.cancel_job) {
-                //Todo cancel job api implement
-            }
+        JobDetail item = jobListModel.getData().get(position);
 
+        if (view.getId() == R.id.start_job) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.CUSTOMER_ADDRESS, item.getCustomerLocality());
+            bundle.putString(Constants.HUB_ADDRESS, item.getHubAddress());
+            bundle.putString(Constants.JOB_ID, item.getJobId());
+            bundle.putString(Constants.START_TIME, item.getStartTime());
+            bundle.putString(Constants.END_TIME, item.getEndTime());
+            bundle.putString(Constants.KEY_MOBILE, item.getCustomerMobile());
+            bundle.putString(Constants.JOB_TYPE, item.getJobType());
+            Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
+
+        } else if (view.getId() == R.id.cancel_job) {
+            showDialogForSelfie("selfie lele");
+            //Todo cancel job api implement
+
+        } else if (view.getId() == R.id.cardview) {
+            Log.d(TAG, "card clicked");
+
+        }
+
+
+    }
+
+
+    private void takeSelfie() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            MainActivity.filename = photoFile.getAbsolutePath();
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == getActivity().RESULT_OK) {
+            if (new File(MainActivity.filename).exists()) {
+                Log.d(TAG, new Date().toString());
+                uploadSelfie();
+            }
+        }
+    }
+
+    private void uploadSelfie() {
+        String userId = UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID);
+        RetrofitRequest.uploadJobCard(new File(MainActivity.filename), null, "selfie", userId, new UploadCallback<Model>(this, Constants.SERVICE_MODE.UPLOAD_SELFIE,
+                null, null, null, null));
+    }
+
+    private boolean checkUpdatedDate(String date) throws ParseException {
+        lastUpdatedDate = dateFormatGmt.parse(date);
+
+        if ((lastUpdatedDate.compareTo(new Date()) > 0))
+            return true;
+        return false;
+    }
+
+    private void showDialogForSelfie(String msg) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setMessage(msg);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                takeSelfie();
+            }
+        }).create();
+        alertDialog.show();
+    }
+
+    private void filterData(List<JobDetail> data) {
+        Iterator iterator = data.iterator();
+        if (filterSet == null)
+            filterSet = new ArrayList<>();
+        filterSet.clear();
+        while (iterator.hasNext()) {
+            JobDetail item = (JobDetail) iterator.next();
+            if ((item.getStatusName().equalsIgnoreCase("New")) || (item.getStatusName().equalsIgnoreCase("InProgress"))) {
+                filterSet.add(item);
+            }
         }
     }
 }
