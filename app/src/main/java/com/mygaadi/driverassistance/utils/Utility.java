@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +50,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import retrofit.client.Response;
 
@@ -528,7 +530,6 @@ public class Utility {
     }
 
 
-
     public static String getResponse(Response response) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -572,4 +573,10 @@ public class Utility {
         return sb.toString();
     }
 
+    public static String getCurrentTimeIST() {
+        SimpleDateFormat resultDateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        resultDateFormatGmt.setTimeZone(TimeZone.getTimeZone("IST"));
+        return resultDateFormatGmt.format(date);
+    }
 }
