@@ -40,14 +40,13 @@ public class GPSTrackerService extends Service {
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     Thread triggerService;
+    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 15; // 15 minutes for data send
     private Activity activity;
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
     private boolean isGPSEnabled;
     private AlertDialog alertDialog;
-    private static String latitude;
-    private static Location location;
-    private static String longitude;
+    public static Location location;
 
     public void permissionGrantedMoveOn() {
         if (displayGpsStatus()) {
@@ -121,7 +120,8 @@ public class GPSTrackerService extends Service {
                 try {
                     Looper.prepare();//Initialize the current thread as a looper.
                     mCustomLocationListener = new CustomLocationListener();
-                    long minTime = 1000; // 60 seconds
+//                    TODO  - Need to change min time to MIN_INTERVAL_TIME
+                    long minTime = 1000 * 60; // 60 seconds
                     float minDistance = 0; // distance in meters
 //                    Criteria criteria = new Criteria();
 //                    criteria.setAccuracy(Criteria.ACCURACY_HIGH);
@@ -211,15 +211,14 @@ public class GPSTrackerService extends Service {
         String longitude = "Longitude: " + location.getLongitude();
         String latitude = "Latitude: " + location.getLatitude();
         Log.v(TAG, longitude + " " + latitude);
-        GPSTrackerService.latitude = latitude;
-        GPSTrackerService.longitude = latitude;
+        GPSTrackerService.location = location;
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DriverLocationEntry.DRIVER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
         values.put(DriverLocationEntry.LATITUDE, latitude);
         values.put(DriverLocationEntry.LONGITUDE, longitude);
-        values.put(DriverLocationEntry.CREATED_AT, longitude);
+        values.put(DriverLocationEntry.CREATED_AT, Utility.getCurrentTimeIST());
 
         getContentResolver().insert(DriverContentProvider.ALL_LOCATION_URI, values);
     }
