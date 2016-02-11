@@ -29,6 +29,9 @@ public interface Constants {
     String KEY_DOC_ID = "docId";
     String UPLOAD_IMAGE = "uploadImage";
     String DOC_TYPE = "docType";
+    String STATUS_CANCEL = "3";
+    String SUBSTATUS_CANCEL = "16";
+    String FILE_NAME = "file_name";
 
     String APP_INSURER = "";
 
