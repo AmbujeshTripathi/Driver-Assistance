@@ -21,7 +21,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/request_time"
+                android:id="@+id/request_start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12:00"
@@ -29,7 +29,15 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/request_time_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="-"
+                android:textSize="@dimen/leadDetailTextSize"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/request_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
