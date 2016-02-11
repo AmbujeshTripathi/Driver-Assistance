@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.fragments.DashboardFragment;
-import com.mygaadi.driverassistance.fragments.StatusUpdateFragment;
 import com.mygaadi.driverassistance.services.GPSTrackerService;
 import com.mygaadi.driverassistance.utils.Utility;
 
@@ -23,6 +22,7 @@ import com.mygaadi.driverassistance.utils.Utility;
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = MainActivity.class.getCanonicalName();
+    public static String filename;
     private Boolean bounded;
     private GPSTrackerService mService;
 
