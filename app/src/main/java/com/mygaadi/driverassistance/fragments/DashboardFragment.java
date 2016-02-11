@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,6 +81,12 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        ActionBar supportActionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle("JOB LIST");
+            supportActionBar.setIcon(R.drawable.launcher_icon);
+        }
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         noDataView = (TextView) rootView.findViewById(R.id.noDataLayout);
         mLayoutManager = new LinearLayoutManager(getActivity());

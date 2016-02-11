@@ -14,7 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -62,6 +61,7 @@ public class Utility {
     public static NotificationManager mNotificationManager;
     private static AlertDialog.Builder alertDialogBuilder;
     public static AlertDialog alertDialogForNoInternet;
+    public static String CURRENT_JOB_ID = "";
 
     private static CustomGearDialog mLoadingDialog;
 

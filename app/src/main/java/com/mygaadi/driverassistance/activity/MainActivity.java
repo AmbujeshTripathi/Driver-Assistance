@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.fragments.CalendarFragment;
@@ -31,11 +32,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private Boolean bounded;
     private GPSTrackerService mService;
     private boolean doubleBackToExitPressedOnce;
+    private Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mActionBarToolbar);
 
         //bind service...
         bindService(new Intent(this, GPSTrackerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -122,18 +126,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         if (backStackEntryName.equalsIgnoreCase(StatusUpdateFragment.TAG)) {
+            Utility.CURRENT_JOB_ID = "";
             Utility.navigateFragment(new DashboardFragment(), DashboardFragment.TAG, null, this);
             return;
         }
 
 
         if (backStackEntryName.equalsIgnoreCase(UploadJobCardFragment.TAG)) {
-            Utility.navigateFragment(new StatusUpdateFragment() , StatusUpdateFragment.TAG , null , this);
+            Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, null, this);
             return;
         }
 
         if (backStackEntryName.equalsIgnoreCase(CalendarFragment.TAG)) {
-            Utility.navigateFragment(new DashboardFragment() , DashboardFragment.TAG , null , this);
+            Utility.navigateFragment(new DashboardFragment(), DashboardFragment.TAG, null, this);
             return;
         }
     }

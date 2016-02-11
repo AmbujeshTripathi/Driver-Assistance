@@ -68,6 +68,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
         ActionBar supportActionBar = ((MainActivity) getActivity()).getSupportActionBar();
         if (supportActionBar != null) {
+            supportActionBar.setIcon(R.drawable.launcher_icon);
             supportActionBar.setTitle("UPDATE STATUS");
         }
 
@@ -113,6 +114,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
 //        String endTime = bundle.getString(Constants.END_TIME);
         mJobId = bundle.getString(Constants.JOB_ID);
+        Utility.CURRENT_JOB_ID = mJobId;
         mCustomerMobile = bundle.getString(Constants.KEY_MOBILE);
     }
 
@@ -178,6 +180,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
         if (mCurrentIndex > childCount - 1) {
             mCurrentIndex = 0;
+            Utility.CURRENT_JOB_ID = "";
             getActivity().getSupportFragmentManager().popBackStackImmediate();
         }
     }

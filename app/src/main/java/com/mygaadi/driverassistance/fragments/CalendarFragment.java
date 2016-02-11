@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mygaadi.driverassistance.R;
+import com.mygaadi.driverassistance.activity.MainActivity;
 import com.mygaadi.driverassistance.utils.DateStripController;
 
 import java.text.SimpleDateFormat;
@@ -71,6 +73,12 @@ public class CalendarFragment extends Fragment {
             }
 
         });
+
+        ActionBar supportActionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle("SELECT DATE");
+            supportActionBar.setIcon(R.drawable.launcher_icon);
+        }
 
         return rootview;
     }
