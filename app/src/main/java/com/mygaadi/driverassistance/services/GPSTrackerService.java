@@ -54,7 +54,8 @@ public class GPSTrackerService extends Service implements RestCallback {
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     Thread triggerService;
-    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 2; // 15 minutes for data send
+    private boolean isBounded;
+    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 5; // 15 minutes for data send
     private Activity activity;
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
@@ -100,12 +101,14 @@ public class GPSTrackerService extends Service implements RestCallback {
         Log.v(TAG, "onBind");
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+        isBounded = true;
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.v(TAG, "onUnbind");
+        isBounded = false;
         return super.onUnbind(intent);
     }
 
@@ -124,7 +127,8 @@ public class GPSTrackerService extends Service implements RestCallback {
                     if (alertDialog != null && alertDialog.isShowing()) {
                         alertDialog.dismiss();
                     }
-                    alertBox(activity, "GPS is OFF");
+                    if (getApplicationContext() != null && isBounded == true)
+                        alertBox(activity, "GPS is OFF");
                 }
             } else if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 if (Utility.isNetworkAvailable(context)) {
@@ -135,7 +139,6 @@ public class GPSTrackerService extends Service implements RestCallback {
                 }
             }
         }
-
     };
 
     public void removeGpsListener() {
@@ -198,11 +201,10 @@ public class GPSTrackerService extends Service implements RestCallback {
             if (isGPSEnabled) {
                 fetchLocationThread();
             } else {
-                if (alertDialog != null && !alertDialog.isShowing()) {
-                    alertDialog.show();
-                } else {
-                    alertBox(activity, "GPS is OFF");
+                if (alertDialog != null && alertDialog.isShowing()) {
+                    alertDialog.dismiss();
                 }
+                alertBox(activity, "GPS is OFF");
             }
         }
     }
@@ -390,7 +392,7 @@ public class GPSTrackerService extends Service implements RestCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG,"onDestroy");
+        Log.v(TAG, "onDestroy");
         unregisterReceiver(mBroadcastReceiver);
         removeGpsListener();
         Utility.showToast(activity, "Service Stopped");
