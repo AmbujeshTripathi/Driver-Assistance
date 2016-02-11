@@ -43,9 +43,9 @@ public interface Constants {
     String REQUEST_JOBS = "/fetch/get_job_list?key=46a94e1a05ab04758d9b4597b5e375a2";
     String SUB_STATUS_LIST_URL = "/fetch/get_sub_status?key=46a94e1a05ab04758d9b4597b5e375a2";
     String UPDATE_STATUS = "/save/job_conversation?key=46a94e1a05ab04758d9b4597b5e375a2";
+    String SEND_LAT_LONGS = "/save/driver_location?key=46a94e1a05ab04758d9b4597b5e375a2";
     String JOB_CARD_UPLOAD_IMAGE_URL = "/save/image_upload?key=46a94e1a05ab04758d9b4597b5e375a2";
 
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, UPDATE_STATUS, UPLOAD_JOB_CARD, SUB_STATUS_LIST, UPLOAD_SELFIE}
-
+    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, UPDATE_STATUS, UPLOAD_JOB_CARD, SUB_STATUS_LIST, SEND_LAT_LONGS, UPLOAD_SELFIE}
 }

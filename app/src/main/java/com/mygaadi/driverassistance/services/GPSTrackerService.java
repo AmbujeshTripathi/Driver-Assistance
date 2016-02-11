@@ -11,9 +11,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -25,25 +27,39 @@ import android.util.Log;
 
 import com.mygaadi.driverassistance.DBPackage.DatabaseVar.DriverLocationEntry;
 import com.mygaadi.driverassistance.constants.Constants;
+import com.mygaadi.driverassistance.model.Model;
 import com.mygaadi.driverassistance.providers.DriverContentProvider;
+import com.mygaadi.driverassistance.retrofit.MyCallback;
+import com.mygaadi.driverassistance.retrofit.RestCallback;
+import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
 import com.mygaadi.driverassistance.utils.Utility;
 import com.mygaadi.driverassistance.utils.UtilitySingleton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Aditya on 2/8/2016.
  */
-public class GPSTrackerService extends Service {
+public class GPSTrackerService extends Service implements RestCallback {
 
     private static final String TAG = GPSTrackerService.class.getCanonicalName();
     public static final int PERMISSION_REQUEST_CODE = 234;
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     Thread triggerService;
-    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 15; // 15 minutes for data send
+    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 2; // 15 minutes for data send
     private Activity activity;
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
     private boolean isGPSEnabled;
+    private boolean isDBCleared = true;
     private AlertDialog alertDialog;
     public static Location location;
 
@@ -70,22 +86,34 @@ public class GPSTrackerService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.v(TAG, "onCreate");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
+        Log.v(TAG, "onBind");
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
-        registerReceiver(mBroadcastReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        unregisterReceiver(mBroadcastReceiver);
+        Log.v(TAG, "onUnbind");
         return super.onUnbind(intent);
     }
+
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.v(TAG, "Broadcast received with action = " + intent.getAction());
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 if (displayGpsStatus()) {
                     if (alertDialog != null && alertDialog.isShowing()) {
@@ -93,11 +121,17 @@ public class GPSTrackerService extends Service {
                     }
                     fetchLocationThread();
                 } else {
-                    removeGpsListener();
                     if (alertDialog != null && alertDialog.isShowing()) {
                         alertDialog.dismiss();
                     }
                     alertBox(activity, "GPS is OFF");
+                }
+            } else if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                if (Utility.isNetworkAvailable(context)) {
+                    Log.v(TAG, "Internet Available");
+                    if (!isDBCleared) {
+                        fetchLatLongFromDBAndUpload();
+                    }
                 }
             }
         }
@@ -107,13 +141,14 @@ public class GPSTrackerService extends Service {
     public void removeGpsListener() {
         try {
             locationManager.removeUpdates(mCustomLocationListener);
-            Log.v(TAG, "GPS tracking off!!!");
+            Log.v(TAG, "Location tracking off!!!");
         } catch (Exception ex) {
             Log.v(TAG, "Exception in GPSService --- " + ex);
         }
     }
 
     private void fetchLocationThread() {
+        Log.v(TAG, "fetchLocationThread");
         triggerService = new Thread(new Runnable() {
             public void run() {
                 try {
@@ -125,13 +160,13 @@ public class GPSTrackerService extends Service {
 //                    Criteria criteria = new Criteria();
 //                    criteria.setAccuracy(Criteria.ACCURACY_HIGH);
 //                    String bestProvider = locationManager.getBestProvider(criteria, false);
-                    if (Utility.isNetworkAvailable(activity)) {
+                    if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                         Log.v(TAG, "Using Network provider");
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime,
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_INTERVAL,
                                 minDistance, mCustomLocationListener);
                     } else {
                         Log.v(TAG, "Using GPS provider");
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime,
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_INTERVAL,
                                 minDistance, mCustomLocationListener);
                     }
 //                    locationManager.requestLocationUpdates(bestProvider, 0, 1, mCustomLocationListener);
@@ -206,20 +241,129 @@ public class GPSTrackerService extends Service {
         }
     }
 
+    private void uploadLatLongData(String[] latitudeArray, String[] longitudeArray, String createdAt[], String jobId[]) {
+        Log.v(TAG, "uploadLatLongData");
+        JSONArray dataJSONArray = new JSONArray();
+
+        for (int i = 0; i < latitudeArray.length; i++) {
+            JSONObject sIdObject = new JSONObject();
+            try {
+                sIdObject.put("jobId", jobId[i]);
+                sIdObject.put("latitude", latitudeArray[i]);
+                sIdObject.put("longitude", longitudeArray[i]);
+                sIdObject.put("created", createdAt[i]);
+                sIdObject.put("send", Utility.getCurrentTimeIST());
+                dataJSONArray.put(sIdObject);
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+                return;
+            }
+        }
+
+        String dataString = dataJSONArray.toString();
+        HashMap<String, String> mParams = new HashMap<String, String>();
+        mParams.put(Constants.USER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
+        mParams.put("data", dataString);
+        RetrofitRequest.sendLatLongs(mParams, new MyCallback<Model>(GPSTrackerService.this, this, false, null, null,
+                Constants.SERVICE_MODE.SEND_LAT_LONGS));
+        Log.v(TAG, "Retrofit call with locations = " + latitudeArray.length + " in Number");
+        Log.v(TAG, "Retrofit call with locations data = " + dataString);
+    }
+
+    @Override
+    public void onFailure(RetrofitError e, Constants.SERVICE_MODE mode) {
+        Log.v(TAG, "Location sending Failure()" + mode);
+    }
+
+    @Override
+    public void onSuccess(Object model, Response response, Constants.SERVICE_MODE mode) {
+        if (mode.equals(Constants.SERVICE_MODE.SEND_LAT_LONGS)) {
+            if (!(model instanceof Model)) {
+                return;
+            }
+            Model responseModel = (Model) model;
+            if (!responseModel.getStatus()) {
+                Log.v(TAG, "Lat Longs not uploaded successfully");
+                return;
+            } else {
+                Log.v(TAG, "Lat Longs uploaded successfully");
+            }
+            //Lat Longs uploaded successfully now clear database...
+            if (isDBCleared == false) {
+                clearLatLongsFromDB();
+            }
+        }
+    }
+
+    private void clearLatLongsFromDB() {
+        Log.v(TAG, "clearLatLongsFromDB");
+        int rowDeleted;
+        String filter = DriverLocationEntry.DRIVER_ID + "=?";
+        String[] filterArgs = new String[]{UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID)};
+        rowDeleted = getContentResolver().delete(DriverContentProvider.ALL_LOCATION_URI, filter, filterArgs);
+        isDBCleared = true;
+        Log.v(TAG, "database cleared for" + rowDeleted);
+    }
+
     private void saveLocationToDatabase(Location location) {
-        String longitude = "Longitude: " + location.getLongitude();
-        String latitude = "Latitude: " + location.getLatitude();
+        String longitude = location.getLongitude() + "";
+        String latitude = location.getLatitude() + "";
         Log.v(TAG, longitude + " " + latitude);
         GPSTrackerService.location = location;
+        Log.v(TAG, "saveLocationToDatabase latitude " + latitude + " longitude " + longitude + " isDBCleared " + isDBCleared);
+        if (Utility.isNetworkAvailable(activity)) {
+            if (isDBCleared) {
+                //upload single location information...
+                String latitudeArray[] = {latitude};
+                String longitudeArray[] = {longitude};
+                String createdAt[] = {Utility.getCurrentTimeIST()};
+                String jobId[] = {Utility.CURRENT_JOB_ID};
+                uploadLatLongData(latitudeArray, longitudeArray, createdAt, jobId);
+            } else {
+                //fetch location details from database and upload...
+                saveLatLongEntry(latitude, longitude);
+                fetchLatLongFromDBAndUpload();
+            }
+        } else {
+            // Save data to database...
+            saveLatLongEntry(latitude, longitude);
+        }
+    }
 
-        // Create a new map of values, where column names are the keys
+    private void saveLatLongEntry(String latitude, String longitude) {
+        Log.v(TAG, "saveLatLongEntry single");
         ContentValues values = new ContentValues();
         values.put(DriverLocationEntry.DRIVER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
+        values.put(DriverLocationEntry.JOB_ID, Utility.CURRENT_JOB_ID);
         values.put(DriverLocationEntry.LATITUDE, latitude);
         values.put(DriverLocationEntry.LONGITUDE, longitude);
         values.put(DriverLocationEntry.CREATED_AT, Utility.getCurrentTimeIST());
-
         getContentResolver().insert(DriverContentProvider.ALL_LOCATION_URI, values);
+        isDBCleared = false;
+    }
+
+    private void fetchLatLongFromDBAndUpload() {
+        Log.v(TAG, "fetchLatLongFromDBAndUpload");
+        Cursor cursor = getContentResolver().query(DriverContentProvider.ALL_LOCATION_URI, null, null, null, null);
+        if (cursor != null && cursor.getCount() != 0) {
+            String latitude[] = new String[cursor.getCount()];
+            String longitude[] = new String[cursor.getCount()];
+            String createdAt[] = new String[cursor.getCount()];
+            String jobId[] = new String[cursor.getCount()];
+
+            cursor.moveToFirst();
+            int i = 0;
+            while (!cursor.isAfterLast()) {
+                latitude[i] = cursor.getString(cursor.getColumnIndex(DriverLocationEntry.LATITUDE));
+                longitude[i] = cursor.getString(cursor.getColumnIndex(DriverLocationEntry.LONGITUDE));
+                createdAt[i] = cursor.getString(cursor.getColumnIndex(DriverLocationEntry.CREATED_AT));
+                jobId[i] = cursor.getString(cursor.getColumnIndex(DriverLocationEntry.JOB_ID));
+                i++;
+                cursor.moveToNext();
+            }
+            //make a retrofit call to upload lat-long data...
+            uploadLatLongData(latitude, longitude, createdAt, jobId);
+        }
     }
 
     private class CustomLocationListener implements LocationListener {
@@ -246,6 +390,9 @@ public class GPSTrackerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.v(TAG,"onDestroy");
+        unregisterReceiver(mBroadcastReceiver);
+        removeGpsListener();
         Utility.showToast(activity, "Service Stopped");
     }
 }

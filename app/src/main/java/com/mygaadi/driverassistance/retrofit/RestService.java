@@ -40,6 +40,9 @@ public interface RestService {
     @POST(Constants.UPDATE_STATUS)
     void updateStatus(@FieldMap HashMap<String, String> map, MyCallback<Model> cb);
 
+    @FormUrlEncoded
+    @POST(Constants.SEND_LAT_LONGS)
+    void sendLatLongs(@FieldMap HashMap<String, String> map, MyCallback<Model> cb);
 
     @Multipart
     @POST(Constants.JOB_CARD_UPLOAD_IMAGE_URL)
@@ -48,5 +51,4 @@ public interface RestService {
                                  @Part(Constants.DOC_TYPE) String docType,
                                  @Part(Constants.USER_ID) String userId,
                                  UploadCallback<Model> cb);
-
 }

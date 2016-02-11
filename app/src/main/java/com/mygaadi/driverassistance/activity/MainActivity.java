@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
 
+        Intent serviceIntent = new Intent(this, GPSTrackerService.class);
+        startService(serviceIntent);
         //bind service...
-        bindService(new Intent(this, GPSTrackerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
         Utility.navigateFragment(new DashboardFragment(), DashboardFragment.TAG, null, this);
     }
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onDestroy() {
         super.onDestroy();
         if (bounded == true && mService != null) {
-            mService.removeGpsListener();
             unbindService(mServiceConnection);
         }
     }
