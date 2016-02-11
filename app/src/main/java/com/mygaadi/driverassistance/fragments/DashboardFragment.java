@@ -186,7 +186,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     private String getCurrentTime() throws ParseException {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat resultDateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        resultDateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = dateFormatGmt.parse(dateSelected);
         String startTime = resultDateFormatGmt.format(date);
         Log.d(TAG, startTime);
