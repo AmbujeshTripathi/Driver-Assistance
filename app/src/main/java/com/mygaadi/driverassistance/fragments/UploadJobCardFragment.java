@@ -33,10 +33,10 @@ import retrofit.client.Response;
 /**
  * Created by Ambujesh on 2/9/2016.
  */
-public class CaptureImageFragment extends DialogFragment implements View.OnClickListener, RestCallback {
+public class UploadJobCardFragment extends DialogFragment implements View.OnClickListener, RestCallback {
 
     private static final int CAPTURE_IMAGE = 101;
-    public static final String TAG = "CaptureImageFragment";
+    public static final String TAG = "UploadJobCardFragment";
     public static final String IS_UPLOADED_SUCCESSFULLY = "isImageUploadedSuccessfully";
     private View rootView;
     private String mImagePath;

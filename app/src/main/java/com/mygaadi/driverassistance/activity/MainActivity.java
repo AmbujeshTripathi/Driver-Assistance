@@ -6,13 +6,18 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mygaadi.driverassistance.R;
+import com.mygaadi.driverassistance.fragments.CalendarFragment;
 import com.mygaadi.driverassistance.fragments.DashboardFragment;
+import com.mygaadi.driverassistance.fragments.StatusUpdateFragment;
+import com.mygaadi.driverassistance.fragments.UploadJobCardFragment;
 import com.mygaadi.driverassistance.services.GPSTrackerService;
 import com.mygaadi.driverassistance.utils.Utility;
 
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static String filename;
     private Boolean bounded;
     private GPSTrackerService mService;
+    private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,4 +87,54 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onStop();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        if (backStackEntryCount <= 0) {
+            super.onBackPressed();
+            return;
+        }
+
+        /*
+         * Below code has been written to pop back the previous fragment whenever back button has been pressed.
+         * P.S. whenever a new fragment is added and we need to add that fragment here to pop-back to previous
+         * fragment on onBackPressed.
+		 */
+        String backStackEntryName = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1).getName();
+        if (backStackEntryName.equalsIgnoreCase(DashboardFragment.TAG)) {
+            if (doubleBackToExitPressedOnce) {
+                finish();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Utility.showToast(this, "Press again to exit");
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 10000);
+            return;
+        }
+
+        if (backStackEntryName.equalsIgnoreCase(StatusUpdateFragment.TAG)) {
+            Utility.navigateFragment(new DashboardFragment(), DashboardFragment.TAG, null, this);
+            return;
+        }
+
+
+        if (backStackEntryName.equalsIgnoreCase(UploadJobCardFragment.TAG)) {
+            Utility.navigateFragment(new StatusUpdateFragment() , StatusUpdateFragment.TAG , null , this);
+            return;
+        }
+
+        if (backStackEntryName.equalsIgnoreCase(CalendarFragment.TAG)) {
+            Utility.navigateFragment(new DashboardFragment() , DashboardFragment.TAG , null , this);
+            return;
+        }
+    }
 }

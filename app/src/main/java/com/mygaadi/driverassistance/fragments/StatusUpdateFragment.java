@@ -4,15 +4,17 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -107,7 +109,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
 
 
         String startTime = bundle.getString(Constants.START_TIME);
-        ((TextView) rootView.findViewById(R.id.tvTime)).setText(startTime);
+        ((TextView) rootView.findViewById(R.id.tvTime)).setText(Utility.getDateTimeInRequiredFormat(startTime));
 
 //        String endTime = bundle.getString(Constants.END_TIME);
         mJobId = bundle.getString(Constants.JOB_ID);
@@ -117,6 +119,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private void setUpViews() {
         linearLayoutStatus = (LinearLayout) rootView.findViewById(R.id.layoutStatus);
         rootView.findViewById(R.id.btnUpdateStatus).setOnClickListener(this);
+        rootView.findViewById(R.id.btnCall).setOnClickListener(this);
     }
 
 
@@ -206,20 +209,40 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
                 showDialogDependOnCase();
                 break;
 
+            case R.id.btnCall:
+                Animation mAnimationShake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+                rootView.findViewById(R.id.btnCall).startAnimation(mAnimationShake);
+                makeCall();
+                break;
+
             default:
                 showDialogToUpdateStatus(v.getId());
                 break;
         }
     }
 
+
+    public void makeCall() {
+        if (mCustomerMobile == null) {
+            Utility.showToast(getActivity(), "No mobile number.");
+            return;
+        }
+        Intent phoneIntent = new Intent(Intent.ACTION_CALL);
+        if (mCustomerMobile.startsWith("+91")) {
+            phoneIntent.setData(Uri.parse("tel:" + mCustomerMobile));
+        } else if (mCustomerMobile != null) {
+            phoneIntent.setData(Uri.parse("tel:" + "+91" + mCustomerMobile));
+        }
+        startActivity(phoneIntent);
+    }
+
+
     private void showDialogDependOnCase() {
-        Log.d(TAG, "mCurrentIndex  =  " + mCurrentIndex);
         if ((subStatusList.size() - 1) < mCurrentIndex) {
             return;
         }
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(mCurrentIndex);
         String subStatusId = subStatusModel.getSubStatusId().trim();
-        Log.d(TAG, "subStatusId = " + subStatusId);
         if (subStatusId.equals("7") || subStatusId.equals("13")) {
             showDialogToUploadImage(mCurrentIndex);
             return;
@@ -291,7 +314,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             bundle.putString(Constants.JOB_ID, mJobId);
             bundle.putSerializable(Constants.KEY_SUB_STATUS_MODEL, subStatusList.get(index));
 
-            DialogFragment newFragment = new CaptureImageFragment();
+            DialogFragment newFragment = new UploadJobCardFragment();
             newFragment.setArguments(bundle);
             newFragment.setTargetFragment(this, CAPTURE_IMAGE);
             newFragment.show(ft, "dialog");
@@ -306,7 +329,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case CAPTURE_IMAGE:
-                    boolean isUploadedSuccessfully = data.getBooleanExtra(CaptureImageFragment.IS_UPLOADED_SUCCESSFULLY, false);
+                    boolean isUploadedSuccessfully = data.getBooleanExtra(UploadJobCardFragment.IS_UPLOADED_SUCCESSFULLY, false);
                     if (isUploadedSuccessfully) {
                         mCurrentIndex = mCurrentIndex + 1;
                         updateListOfStatusViews();
