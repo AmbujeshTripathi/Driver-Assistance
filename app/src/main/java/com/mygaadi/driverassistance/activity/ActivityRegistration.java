@@ -1,5 +1,6 @@
 package com.mygaadi.driverassistance.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -70,7 +71,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         showNoInternetConnectionDialog(this);
-
+        Utility.checkForPermission(this, new String[]{Manifest.permission.READ_SMS}, 102);
         initViews();
 
         etMobileNumber.addTextChangedListener(new TextWatcher() {
