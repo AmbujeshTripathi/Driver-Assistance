@@ -29,8 +29,7 @@ public interface Constants {
     String KEY_DOC_ID = "docId";
     String UPLOAD_IMAGE = "uploadImage";
     String DOC_TYPE = "docType";
-    String STATUS_CANCEL = "3";
-    String SUBSTATUS_CANCEL = "16";
+
     String FILE_NAME = "file_name";
 
     String APP_INSURER = "";
@@ -52,6 +51,6 @@ public interface Constants {
     String SUB_STATUS_CANCEL_BY_DRIVER = "16";
     String SUB_STATUS_READY_FOR_NEXT_JOB = "18";
 
-    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, UPDATE_STATUS, UPLOAD_JOB_CARD, SUB_STATUS_LIST, UPLOAD_SELFIE}
+    public enum SERVICE_MODE {OTP_RECEIVE, OTP_VERIFICATION, GET_JOBS, UPDATE_STATUS, UPLOAD_JOB_CARD, SUB_STATUS_LIST, SEND_LAT_LONGS, UPDATE_STATUS_IN_PROGRESS, UPDATE_STATUS_COMPLETE_CANCEL, UPLOAD_SELFIE}
 
 }

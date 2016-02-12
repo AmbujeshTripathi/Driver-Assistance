@@ -400,7 +400,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         params.put(Constants.USER_ID, UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID));
         params.put(Constants.JOB_ID, mJobId);
         params.put(Constants.KEY_STATUS_ID, Constants.STATUS_CANCEL);
-        params.put(Constants.KEY_SUB_STATUS_ID, Constants.SUBSTATUS_CANCEL);
+        params.put(Constants.KEY_SUB_STATUS_ID, Constants.SUB_STATUS_CANCEL_BY_DRIVER);
         params.put(Constants.KEY_COMMENT, comment);
         params.put(Constants.KEY_DOC_ID, "");
         params.put(Constants.KEY_LATITUDE, GPSTrackerService.location.getLatitude() + "");
