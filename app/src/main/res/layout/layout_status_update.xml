@@ -13,7 +13,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -152,151 +153,48 @@
 
 
                 <TextView
-                    android:id="@+id/btnUpdateStatus"
+                    android:id="@+id/btnCancelJob"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/button_bg_selector"
+                    android:background="@drawable/white_rounded_bg"
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="Update Status"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp" />
+                    android:text="Cancel Job"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
             </LinearLayout>
 
 
         </ScrollView>
 
-
-    </LinearLayout>
-
-    <!--For Capture Screen-->
-
-
-    <LinearLayout
-        android:id="@+id/imageCaptureLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="10dp"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="Capture Image"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
-        </RelativeLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginRight="5dp"
-            android:background="@color/orange" />
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary" />
 
 
-        <FrameLayout
-            android:id="@+id/frameLayoutForImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+        <TextView
+            android:id="@+id/btnUpdateStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_bg_selector"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Update Status"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
 
-            <ImageView
-                android:id="@+id/imgCapturedImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/documentImageBackground"
-                android:scaleType="centerInside" />
-
-
-            <ImageView
-                android:id="@+id/imgCameraIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_fragment_number_selected"
-                android:padding="7dp"
-                android:src="@android:drawable/ic_menu_camera" />
-
-            <ImageView
-                android:id="@+id/imgRetryIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_fragment_number_selected"
-                android:padding="7dp"
-                android:src="@drawable/ic_file_upload_black_36dp"
-                android:visibility="gone" />
-
-            <ProgressBar
-                android:id="@+id/progressDocumentCopy"
-                style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/imgUploadSuccess"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_upload_success_icon"
-                android:padding="7dp"
-                android:src="@drawable/checked"
-                android:visibility="gone" />
-
-        </FrameLayout>
-
-
-        <LinearLayout
-            android:id="@+id/layoutBottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_bg_selector"
-                android:text="@string/R.string.cancel"
-                android:textColor="@color/White"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_bg_selector"
-                android:text="@string/save"
-                android:textColor="@color/White"
-                android:textSize="20sp" />
-
-
-        </LinearLayout>
 
     </LinearLayout>
+
 
 </RelativeLayout>

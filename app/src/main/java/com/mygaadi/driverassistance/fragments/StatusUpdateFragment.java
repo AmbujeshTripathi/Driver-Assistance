@@ -122,6 +122,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         linearLayoutStatus = (LinearLayout) rootView.findViewById(R.id.layoutStatus);
         rootView.findViewById(R.id.btnUpdateStatus).setOnClickListener(this);
         rootView.findViewById(R.id.btnCall).setOnClickListener(this);
+        rootView.findViewById(R.id.btnCancelJob).setOnClickListener(this);
     }
 
 
@@ -143,16 +144,10 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
                 Snackbar.make(getView(), subStatusListModel.getMessage(), Snackbar.LENGTH_SHORT).show();
                 return;
             }
-            //TODO need to integrate the check to select any of two lists (Pick up or Drop)
-            if (isPickUpJob) {
-                subStatusList = subStatusListModel.getData().getPickUp();
-            } else {
-                subStatusList = subStatusListModel.getData().getDrop();
-            }
-            setStatusUpdateListOnViews(subStatusList);
+            updateListAndSetThemOnListview(subStatusListModel);
             return;
         }
-        if (mode.equals(Constants.SERVICE_MODE.UPDATE_STATUS)) {
+        if (mode.equals(Constants.SERVICE_MODE.UPDATE_STATUS_IN_PROGRESS)) {
             if (!(model instanceof Model)) {
                 return;
             }
@@ -164,8 +159,42 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             Snackbar.make(getView(), responseModel.getMessage(), Snackbar.LENGTH_SHORT).show();
             mCurrentIndex = mCurrentIndex + 1;
             updateListOfStatusViews();
+            return;
         }
 
+        if (mode.equals(Constants.SERVICE_MODE.UPDATE_STATUS_COMPLETE_CANCEL)) {
+            if (!(model instanceof Model)) {
+                return;
+            }
+            Model responseModel = (Model) model;
+            if (!responseModel.getStatus()) {
+                Snackbar.make(getView(), responseModel.getMessage(), Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            mCurrentIndex = 0;
+            Utility.CURRENT_JOB_ID = "";
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            return;
+        }
+
+    }
+
+    private void updateListAndSetThemOnListview(SubStatusListModel subStatusListModel) {
+        List<SubStatusListModel.SubStatusModel> subStatusList;
+        if (isPickUpJob) {
+            subStatusList = subStatusListModel.getData().getPickUp();
+        } else {
+            subStatusList = subStatusListModel.getData().getDrop();
+        }
+        for (int i = 0; i < subStatusList.size(); i++) {
+            SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(i);
+            if (!subStatusModel.getStatusId().equals(Constants.STATUS_IN_PROGRESS)) {
+                subStatusList.remove(i);
+                i--;
+            }
+        }
+        this.subStatusList = subStatusList;
+        setStatusUpdateListOnViews(this.subStatusList);
     }
 
     private void updateListOfStatusViews() {
@@ -179,9 +208,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         }
 
         if (mCurrentIndex > childCount - 1) {
-            mCurrentIndex = 0;
-            Utility.CURRENT_JOB_ID = "";
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            updateStatusOnServerForCompleteJob(Constants.STATUS_COMPLETE, Constants.SUB_STATUS_READY_FOR_NEXT_JOB, "");
         }
     }
 
@@ -192,36 +219,75 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_in_progress);
             ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(0).getSubStatusName());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 5, 0, 5);
+            layoutParams.setMargins(0, 0, 0, 0);
+
             linearLayoutStatus.addView(childView, layoutParams);
         }
         for (int i = 1; i < size; i++) {
             View childView = LayoutInflater.from(getActivity()).inflate(R.layout.status_update_item, null);
-            ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open);
+            ((ImageView) childView.findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_open_new);
             ((TextView) childView.findViewById(R.id.tvStatusText)).setText(list.get(i).getSubStatusName());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 5, 0, 5);
+            layoutParams.setMargins(0, 0, 0, 0);
             linearLayoutStatus.addView(childView, layoutParams);
         }
     }
 
     @Override
     public void onClick(View v) {
+        Animation mAnimationShake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         switch (v.getId()) {
             case R.id.btnUpdateStatus:
                 showDialogDependOnCase();
                 break;
 
             case R.id.btnCall:
-                Animation mAnimationShake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
                 rootView.findViewById(R.id.btnCall).startAnimation(mAnimationShake);
                 makeCall();
+                break;
+
+            case R.id.btnCancelJob:
+                rootView.findViewById(R.id.btnCancelJob).startAnimation(mAnimationShake);
+                showDialogToCancelJob();
                 break;
 
             default:
                 showDialogToUpdateStatus(v.getId());
                 break;
         }
+    }
+
+    private void showDialogToCancelJob() {
+        final Dialog dialog = Utility.getDialog(getActivity(), R.layout.layout_dialog_with_message);
+        ((TextView) dialog.findViewById(R.id.tvTitle)).setText("Cancel Job?");
+
+        ((TextView) dialog.findViewById(R.id.tvMessage)).setText("Are you sure you want to cancel this job.");
+        final EditText enterComment = (EditText) dialog.findViewById(R.id.enterComment);
+
+        Button btnBack = (Button) dialog.findViewById(R.id.btnBack);
+        btnBack.setText("No");
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button btSubmit = (Button) dialog.findViewById(R.id.btnSave);
+        btSubmit.setText("Yes");
+        btSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    updateStatusOnServerForCompleteJob(Constants.STATUS_CANCEL, Constants.SUB_STATUS_CANCEL_BY_DRIVER, "" + enterComment.getText().toString());
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        dialog.show();
     }
 
 
@@ -246,7 +312,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         }
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(mCurrentIndex);
         String subStatusId = subStatusModel.getSubStatusId().trim();
-        if (subStatusId.equals("7") || subStatusId.equals("13")) {
+        if (!isPickUpJob && subStatusId.equals("14")) {
             showDialogToUploadImage(mCurrentIndex);
             return;
         }
@@ -277,7 +343,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             @Override
             public void onClick(View v) {
                 try {
-                    updateStatusOnServer(index, enterComment.getText().toString());
+                    updateStatusOnServerForInProgressLead(index, enterComment.getText().toString());
                     dialog.dismiss();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -288,7 +354,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         dialog.show();
     }
 
-    private void updateStatusOnServer(int index, String comment) {
+    private void updateStatusOnServerForInProgressLead(int index, String comment) {
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(index);
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.USER_ID, UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID));
@@ -301,7 +367,23 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
         params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
         RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
-                Constants.SERVICE_MODE.UPDATE_STATUS));
+                Constants.SERVICE_MODE.UPDATE_STATUS_IN_PROGRESS));
+    }
+
+
+    private void updateStatusOnServerForCompleteJob(String status, String subStatus, String comment) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.USER_ID, UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID));
+        params.put(Constants.JOB_ID, mJobId);
+        params.put(Constants.KEY_STATUS_ID, status);
+        params.put(Constants.KEY_SUB_STATUS_ID, subStatus);
+        params.put(Constants.KEY_COMMENT, comment);
+        params.put(Constants.KEY_DOC_ID, "");
+        Location location = GPSTrackerService.location;
+        params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
+        params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
+        RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
+                Constants.SERVICE_MODE.UPDATE_STATUS_COMPLETE_CANCEL));
     }
 
 

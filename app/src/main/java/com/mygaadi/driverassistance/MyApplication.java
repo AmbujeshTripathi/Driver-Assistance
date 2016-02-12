@@ -33,7 +33,7 @@ public class MyApplication extends Application {
         instance = this;
         this.applicationContext = this;
         //Override application Font with roboto
-        overrideFont();
+        //overrideFont();
 
     }
 
