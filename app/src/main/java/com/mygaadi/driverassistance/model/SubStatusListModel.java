@@ -34,25 +34,25 @@ public class SubStatusListModel extends Model implements Serializable{
 
     public class Data  implements Serializable{
 
-        @SerializedName("pickUp ")
+        @SerializedName("pickup")
         @Expose
-        private List<SubStatusModel> pickUp = new ArrayList<SubStatusModel>();
+        private List<SubStatusModel> pickup = new ArrayList<SubStatusModel>();
         @SerializedName("drop")
         @Expose
         private List<SubStatusModel> drop = new ArrayList<SubStatusModel>();
 
         /**
-         * @return The pickUp
+         * @return The pickup
          */
-        public List<SubStatusModel> getPickUp() {
-            return pickUp;
+        public List<SubStatusModel> getPickup() {
+            return pickup;
         }
 
         /**
-         * @param pickUp The pickUp
+         * @param pickup The pickup
          */
-        public void setPickUp(List<SubStatusModel> pickUp) {
-            this.pickUp = pickUp;
+        public void setPickup(List<SubStatusModel> pickup) {
+            this.pickup = pickup;
         }
 
         /**

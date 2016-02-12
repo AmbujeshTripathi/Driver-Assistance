@@ -45,7 +45,6 @@ import retrofit.client.Response;
 public class StatusUpdateFragment extends Fragment implements RestCallback, View.OnClickListener {
 
     public static final String TAG = "StatusUpdateFragment";
-    private static final java.lang.String IS_PICK_UP = "isPickUpJob";
     private static final int CAPTURE_IMAGE = 101;
     private ViewGroup rootView;
     private LinearLayout linearLayoutStatus;
@@ -72,10 +71,6 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             supportActionBar.setTitle("UPDATE STATUS");
         }
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            isPickUpJob = bundle.getBoolean(IS_PICK_UP);
-        }
         setUpViews();
         getSubStatusListFromServer();
         setDataOnViews();
@@ -100,10 +95,12 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         TextView tvDropOff = (TextView) rootView.findViewById(R.id.tvAddressDropOff);
         String customerAddress = bundle.getString(Constants.CUSTOMER_ADDRESS);
         String hubAddress = bundle.getString(Constants.HUB_ADDRESS);
-        if (jobType == "1") {
+        if (jobType.equals("1")) {
+            isPickUpJob = true;
             tvPickUp.setText(customerAddress);
             tvDropOff.setText(hubAddress);
         } else {
+            isPickUpJob = false;
             tvPickUp.setText(hubAddress);
             tvDropOff.setText(customerAddress);
         }
@@ -182,9 +179,13 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private void updateListAndSetThemOnListview(SubStatusListModel subStatusListModel) {
         List<SubStatusListModel.SubStatusModel> subStatusList;
         if (isPickUpJob) {
-            subStatusList = subStatusListModel.getData().getPickUp();
+            subStatusList = subStatusListModel.getData().getPickup();
         } else {
             subStatusList = subStatusListModel.getData().getDrop();
+        }
+        if (subStatusList == null) {
+            Snackbar.make(getView(), "Unable to load status at this moment", Snackbar.LENGTH_SHORT).show();
+            return;
         }
         for (int i = 0; i < subStatusList.size(); i++) {
             SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(i);
@@ -315,7 +316,8 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         }
         SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(mCurrentIndex);
         String subStatusId = subStatusModel.getSubStatusId().trim();
-        if (!isPickUpJob && subStatusId.equals("14")) {
+
+        if (Integer.parseInt(subStatusId) == 5 || subStatusId.equals("14")) {
             showDialogToUploadImage(mCurrentIndex);
             return;
         }
