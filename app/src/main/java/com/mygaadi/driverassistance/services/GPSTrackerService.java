@@ -55,7 +55,7 @@ public class GPSTrackerService extends Service implements RestCallback {
     private final IBinder mBinder = new LocalBinder();
     Thread triggerService;
     private boolean isBounded;
-    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 1; // 15 minutes for data send
+    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 15; // 15 minutes for data send
     private Activity activity;
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
