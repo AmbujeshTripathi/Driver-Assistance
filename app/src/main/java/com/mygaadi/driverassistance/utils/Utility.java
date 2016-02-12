@@ -14,10 +14,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -593,5 +595,35 @@ public class Utility {
             e.printStackTrace();
         }
         return time;
+    }
+
+    public static boolean checkDayGap(String startTime) throws ParseException {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormatGmt.parse(startTime);
+        Date nowDate = new Date();
+        if (nowDate.getDay() != date.getDay()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean checkTimeGap(String startTime) throws ParseException {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormatGmt.parse(startTime);
+        Date nowDate = new Date();
+        long diff = nowDate.getTime() - date.getTime();
+        int hours = (int) (diff / (1000 * 60 * 60));
+        return (hours <= 2);
+
+    }
+
+    public static boolean checkForPermission(Activity activity, String[] permission, int request_code) {
+        for (String perm : permission) {
+            if (ContextCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, permission, request_code);
+                return false;
+            }
+        }
+        return true;
     }
 }

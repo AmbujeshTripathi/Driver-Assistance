@@ -233,7 +233,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnRegister:
-                requestOtp("Loggin In");
+                requestOtp("Logging In");
                 break;
             case R.id.tvBack:
                 btnRegister.setEnabled(true);
@@ -243,6 +243,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
                 requestOtp("Resending OTP..");
                 break;
             case R.id.btn_verify:
+                Utility.hideSoftKeyboard(this, v);
                 String otpEntered = edtOtpCode.getText().toString();
                 if (otpEntered.equals("")) {
                     Utility.showToast(this, "Please enter OTP");
