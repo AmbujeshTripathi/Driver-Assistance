@@ -55,7 +55,7 @@ public class GPSTrackerService extends Service implements RestCallback {
     private final IBinder mBinder = new LocalBinder();
     Thread triggerService;
     private boolean isBounded;
-    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 5; // 15 minutes for data send
+    private static final long MIN_TIME_INTERVAL = 1000 * 60 * 15; // 15 minutes for data send
     private Activity activity;
     private LocationManager locationManager;
     private CustomLocationListener mCustomLocationListener;
@@ -63,6 +63,7 @@ public class GPSTrackerService extends Service implements RestCallback {
     private boolean isDBCleared = true;
     private AlertDialog alertDialog;
     public static Location location;
+    private Context mServiceContext;
 
     public void permissionGrantedMoveOn() {
         if (displayGpsStatus()) {
@@ -71,7 +72,8 @@ public class GPSTrackerService extends Service implements RestCallback {
             if (alertDialog != null && alertDialog.isShowing()) {
                 alertDialog.dismiss();
             }
-            alertBox(activity, "GPS is OFF");
+            if (getApplicationContext() != null && isBounded == true)
+                alertBox(activity, "GPS is OFF");
         }
     }
 
@@ -80,7 +82,6 @@ public class GPSTrackerService extends Service implements RestCallback {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-
         public GPSTrackerService getService() {
             return GPSTrackerService.this;
         }
@@ -89,20 +90,28 @@ public class GPSTrackerService extends Service implements RestCallback {
     @Override
     public void onCreate() {
         super.onCreate();
+        mServiceContext = GPSTrackerService.this;
+        locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
         Log.v(TAG, "onCreate");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mBroadcastReceiver, intentFilter);
+        checkGPSAndStartThread();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         Log.v(TAG, "onBind");
-        locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
         isBounded = true;
         return mBinder;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.v(TAG, "onStartCommand");
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -197,15 +206,21 @@ public class GPSTrackerService extends Service implements RestCallback {
     public void startLocationFetching(Activity activity) {
         this.activity = activity;
         if (checkAndAskForGPSPermissions()) {
-            isGPSEnabled = displayGpsStatus();
-            if (isGPSEnabled) {
-                fetchLocationThread();
-            } else {
-                if (alertDialog != null && alertDialog.isShowing()) {
-                    alertDialog.dismiss();
-                }
-                alertBox(activity, "GPS is OFF");
+            checkGPSAndStartThread();
+        }
+    }
+
+    private void checkGPSAndStartThread() {
+        Log.v(TAG, "checkGPSAndStartThread");
+        isGPSEnabled = displayGpsStatus();
+        if (isGPSEnabled) {
+            fetchLocationThread();
+        } else {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                alertDialog.dismiss();
             }
+            if (getApplicationContext() != null && isBounded == true)
+                alertBox(activity, "GPS is OFF");
         }
     }
 
@@ -264,7 +279,7 @@ public class GPSTrackerService extends Service implements RestCallback {
 
         String dataString = dataJSONArray.toString();
         HashMap<String, String> mParams = new HashMap<String, String>();
-        mParams.put(Constants.USER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
+        mParams.put(Constants.USER_ID, UtilitySingleton.getInstance(mServiceContext).getStringFromSharedPref(Constants.USER_ID));
         mParams.put("data", dataString);
         RetrofitRequest.sendLatLongs(mParams, new MyCallback<Model>(GPSTrackerService.this, this, false, null, null,
                 Constants.SERVICE_MODE.SEND_LAT_LONGS));
@@ -301,7 +316,7 @@ public class GPSTrackerService extends Service implements RestCallback {
         Log.v(TAG, "clearLatLongsFromDB");
         int rowDeleted;
         String filter = DriverLocationEntry.DRIVER_ID + "=?";
-        String[] filterArgs = new String[]{UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID)};
+        String[] filterArgs = new String[]{UtilitySingleton.getInstance(mServiceContext).getStringFromSharedPref(Constants.USER_ID)};
         rowDeleted = getContentResolver().delete(DriverContentProvider.ALL_LOCATION_URI, filter, filterArgs);
         isDBCleared = true;
         Log.v(TAG, "database cleared for" + rowDeleted);
@@ -313,7 +328,7 @@ public class GPSTrackerService extends Service implements RestCallback {
         Log.v(TAG, longitude + " " + latitude);
         GPSTrackerService.location = location;
         Log.v(TAG, "saveLocationToDatabase latitude " + latitude + " longitude " + longitude + " isDBCleared " + isDBCleared);
-        if (Utility.isNetworkAvailable(activity)) {
+        if (Utility.isNetworkAvailable(mServiceContext)) {
             if (isDBCleared) {
                 //upload single location information...
                 String latitudeArray[] = {latitude};
@@ -335,7 +350,7 @@ public class GPSTrackerService extends Service implements RestCallback {
     private void saveLatLongEntry(String latitude, String longitude) {
         Log.v(TAG, "saveLatLongEntry single");
         ContentValues values = new ContentValues();
-        values.put(DriverLocationEntry.DRIVER_ID, UtilitySingleton.getInstance(activity).getStringFromSharedPref(Constants.USER_ID));
+        values.put(DriverLocationEntry.DRIVER_ID, UtilitySingleton.getInstance(mServiceContext).getStringFromSharedPref(Constants.USER_ID));
         values.put(DriverLocationEntry.JOB_ID, Utility.CURRENT_JOB_ID);
         values.put(DriverLocationEntry.LATITUDE, latitude);
         values.put(DriverLocationEntry.LONGITUDE, longitude);
@@ -392,9 +407,8 @@ public class GPSTrackerService extends Service implements RestCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        Log.v(TAG, "onDestroy -- Lat Long fetcher service stopped");
         unregisterReceiver(mBroadcastReceiver);
         removeGpsListener();
-        Utility.showToast(activity, "Service Stopped");
     }
 }
