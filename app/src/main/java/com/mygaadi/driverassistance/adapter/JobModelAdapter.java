@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mygaadi.driverassistance.R;
 import com.mygaadi.driverassistance.model.JobDetail;
+import com.mygaadi.driverassistance.utils.Utility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,8 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.customerNumber.setText(jobDetailModel.getCustomerMobile());
         holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
         holder.hubAddress.setText(jobDetailModel.getHubAddress());
+        holder.requestStartTime.setText(Utility.getTimeFromDate(jobDetailModel.getStartTime()));
+        holder.requestEndTime.setText(Utility.getTimeFromDate(jobDetailModel.getEndTime()));
         try {
             if ((position == 0) && (checkTimeGap(jobDetailModel.getStartTime())))
                 holder.buttonLayout.setVisibility(View.VISIBLE);
@@ -87,7 +90,8 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         TextView customerNumber;
         TextView customerAddress;
         TextView hubAddress;
-        TextView requestTime;
+        TextView requestStartTime;
+        TextView requestEndTime;
         Button startJob, cancelJob;
         LinearLayout buttonLayout, call_layout;
 
@@ -95,7 +99,8 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         public CardViewHolder(View itemView) {
             super(itemView);
 
-            requestTime = (TextView) itemView.findViewById(R.id.request_time);
+            requestStartTime = (TextView) itemView.findViewById(R.id.request_start_time);
+            requestEndTime = (TextView) itemView.findViewById(R.id.request_end_time);
             customerEmail = (TextView) itemView.findViewById(R.id.customer_email);
             customerNumber = (TextView) itemView.findViewById(R.id.customer_mobile);
             customerAddress = (TextView) itemView.findViewById(R.id.customer_address);
@@ -139,12 +144,12 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
     }
 
     private boolean checkTimeGap(String startTime) throws ParseException {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = dateFormatGmt.parse(startTime);
         Date nowDate = new Date();
-        long diff = nowDate.getTime() - date.getTime();
-        int days = (int) (diff / (1000 * 60 * 60 * 24));
-        int hours = (int) ((diff - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
-        return (hours > 2);
+        long diff = date.getTime() - nowDate.getTime();
+        int hours = (int) (diff / (1000 * 60 * 60));
+        return (hours <= 2);
     }
 }

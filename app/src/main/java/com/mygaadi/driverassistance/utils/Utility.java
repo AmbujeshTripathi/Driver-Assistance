@@ -49,7 +49,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 import retrofit.client.Response;
 
@@ -576,7 +575,23 @@ public class Utility {
     public static String getCurrentTimeIST() {
         SimpleDateFormat resultDateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        resultDateFormatGmt.setTimeZone(TimeZone.getTimeZone("IST"));
+//        resultDateFormatGmt.setTimeZone(TimeZone.getTimeZone("IST"));
         return resultDateFormatGmt.format(date);
+    }
+
+    public static String getTimeFromDate(String srcDateStr) {
+        String time = null;
+        if (srcDateStr == null || srcDateStr.trim().equals(""))
+            return time;
+        try {
+            DateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat outputTimeFormat = new SimpleDateFormat("hh:mm a");
+            Date inputDate = inputDateFormat.parse(srcDateStr);
+            time = outputTimeFormat.format(inputDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return time;
     }
 }

@@ -42,6 +42,10 @@ public class RetrofitRequest {
         restService.updateStatus(map, cb);
     }
 
+    public static void sendLatLongs(HashMap<String, String> map, MyCallback<Model> cb) {
+        restService.sendLatLongs(map, cb);
+    }
+
 
     public static void uploadJobCard(File file,
                                      String jobId,

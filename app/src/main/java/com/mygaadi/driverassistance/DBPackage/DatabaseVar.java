@@ -1,6 +1,5 @@
 package com.mygaadi.driverassistance.DBPackage;
 
-import android.database.DatabaseErrorHandler;
 import android.provider.BaseColumns;
 
 /**
@@ -18,6 +17,7 @@ public final class DatabaseVar {
             + Tables.ALL_LOCATION + " ("
             + DriverLocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + DriverLocationEntry.DRIVER_ID + " INTEGER,"
+            + DriverLocationEntry.JOB_ID + " VARCHAR,"
             + DriverLocationEntry.LATITUDE + " VARCHAR,"
             + DriverLocationEntry.LONGITUDE + " VARCHAR,"
             + DriverLocationEntry.CREATED_AT + " VARCHAR)";
@@ -31,6 +31,7 @@ public final class DatabaseVar {
      */
     public static abstract class DriverLocationEntry implements BaseColumns {
         public static final String DRIVER_ID = "driverId";
+        public static final String JOB_ID = "jobId";
         public static final String LATITUDE = "latitude";
         public static final String LONGITUDE = "longitude";
         public static final String CREATED_AT = "createdAt";
