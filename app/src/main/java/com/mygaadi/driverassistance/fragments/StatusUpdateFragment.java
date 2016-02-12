@@ -198,6 +198,9 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     }
 
     private void updateListOfStatusViews() {
+        if (mCurrentIndex > 2) {
+            rootView.findViewById(R.id.btnCancelJob).setVisibility(View.GONE);
+        }
         int childCount = linearLayoutStatus.getChildCount();
         for (int i = 0; i < childCount && i < mCurrentIndex; i++) {
             ((ImageView) linearLayoutStatus.getChildAt(i).findViewById(R.id.statusIndicator)).setImageResource(R.drawable.status_done);
