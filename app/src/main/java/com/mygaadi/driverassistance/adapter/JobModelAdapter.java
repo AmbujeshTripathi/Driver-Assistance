@@ -29,13 +29,15 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
     Context context;
     List<JobDetail> resultSet;
     String modelName;
+    int resumeId;
     final String TAG = "JobModelAdapter";
     static OnItemClickListener onItemClickListener;
 
-    public JobModelAdapter(Context context, List<JobDetail> jobDetailList, OnItemClickListener onItemClickListener) {
+    public JobModelAdapter(Context context, List<JobDetail> jobDetailList, OnItemClickListener onItemClickListener, int resumeId) {
         this.resultSet = jobDetailList;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
+        this.resumeId = resumeId;
     }
 
     @Override
@@ -56,8 +58,19 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.requestStartTime.setText(Utility.getTimeFromDate(jobDetailModel.getStartTime()));
         holder.requestEndTime.setText(Utility.getTimeFromDate(jobDetailModel.getEndTime()));
         try {
-            if ((position == 0) && (Utility.checkDayGap(jobDetailModel.getStartTime())))
-                holder.buttonLayout.setVisibility(View.VISIBLE);
+            if (Utility.checkDayGap(jobDetailModel.getStartTime())) {
+                if ((resumeId == -1) && (jobDetailModel.getStatusName().equalsIgnoreCase("New"))) {
+                    resumeId = position;
+                    holder.buttonLayout.setVisibility(View.VISIBLE);
+                } else if ((resumeId == position) && (jobDetailModel.getStatusName().equalsIgnoreCase("InProgress"))) {
+                    holder.buttonLayout.setVisibility(View.VISIBLE);
+                    holder.startJob.setText("RESUME");
+                } else {
+                    holder.buttonLayout.setVisibility(View.GONE);
+                }
+
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

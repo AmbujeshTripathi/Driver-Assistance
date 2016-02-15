@@ -71,6 +71,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     private TextView noDataView;
     private ProgressBar mProgressBar;
     private Dialog dialog;
+    private Button resumeButton;
     JobListModel jobListModel;
     List<JobDetail> resultSet, filterSet;
     String[] values = {"a", "a", "v"};
@@ -78,6 +79,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     String mCurrentPhotoPath;
     Date lastUpdatedDate;
     String mJobId;
+    int resumeId = -1;
     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
     String permissions[] = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static final int PERMISSION_REQUEST_CODE = 101;
@@ -105,6 +107,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         noDataView = (TextView) rootView.findViewById(R.id.noDataLayout);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBarSelfie);
+        resumeButton = (Button) rootView.findViewById(R.id.resume_button);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         this.mDateStripController = new DateStripController((MainActivity) getActivity(), this);
@@ -122,6 +125,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     @Override
     public void onDateSelected(String date) {
         dateSelected = date;
+        resumeId = -1;
         Log.d(TAG, date);
         try {
             getJobDetailFromServer();
@@ -171,11 +175,13 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
                             return ((Utility.getDateFromTime(lhs.getStartTime())).compareTo(Utility.getDateFromTime(rhs.getStartTime())));
                         }
                     });
+                    findResumeId(filterSet);
                     initData();
                 }
 
             }
         } else if (mode == Constants.SERVICE_MODE.UPLOAD_SELFIE) {
+//            mProgressBar.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "Selfie uploaded", Toast.LENGTH_SHORT).show();
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
             UtilitySingleton.getInstance(getActivity()).saveStringInSharedPref(Constants.IS_SELFIE_UPLOADED, dateFormatGmt.format(new Date()).toString());
@@ -226,7 +232,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         resultSet.clear();
         resultSet.addAll(filterSet);
 
-        customAdapter = new JobModelAdapter(getActivity(), resultSet, this);
+        customAdapter = new JobModelAdapter(getActivity(), resultSet, this, resumeId);
         mRecyclerView.setAdapter(customAdapter);
         customAdapter.notifyDataSetChanged();
 
@@ -255,7 +261,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         } else if (view.getId() == R.id.cardview) {
             Log.d(TAG, "card clicked");
             try {
-                if ((Utility.checkDayGap(item.getStartTime())) || (!Utility.checkTimeGap(item.getStartTime())))
+                if (!(Utility.checkDayGap(item.getStartTime()) && Utility.checkTimeGap(item.getStartTime())))
                     Toast.makeText(getActivity(), "Task cannot be started.", Toast.LENGTH_SHORT).show();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -323,6 +329,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         String userId = UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.USER_ID);
         RetrofitRequest.uploadJobCard(new File(fileName), null, "selfie", userId, new UploadCallback<Model>(this, Constants.SERVICE_MODE.UPLOAD_SELFIE,
                 mProgressBar, null, null, null));
+//        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     private boolean checkUpdatedDate(String date) throws ParseException {
@@ -362,7 +369,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         filterSet.clear();
         while (iterator.hasNext()) {
             JobDetail item = (JobDetail) iterator.next();
-            if ((item.getStatusName().equalsIgnoreCase("New")) || (item.getStatusName().equalsIgnoreCase("InProgress"))) {
+            if (!(item.getStatusName().equalsIgnoreCase("Cancel"))) {// || (item.getStatusName().equalsIgnoreCase("Complete")) || (item.getStatusName().equalsIgnoreCase("InProgress"))) {
                 filterSet.add(item);
             }
         }
@@ -438,5 +445,25 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
     public void onSaveInstanceState(Bundle outState) {
 //        super.onSaveInstanceState(outState);
         outState.putString(Constants.FILE_NAME, fileName);
+    }
+
+    private void findResumeId(List<JobDetail> data) {
+
+        for (int i = 0; i < data.size(); i++) {
+            final JobDetail item = data.get(i);
+            if ((item.getStatusName().equalsIgnoreCase("InProgress")) && resumeId == -1) {
+                resumeId = i;
+                resumeButton.setVisibility(View.VISIBLE);
+                resumeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startNextFragment(item);
+                    }
+                });
+                return;
+            }
+        }
+        if (resumeId == -1)
+            resumeButton.setVisibility(View.GONE);
     }
 }

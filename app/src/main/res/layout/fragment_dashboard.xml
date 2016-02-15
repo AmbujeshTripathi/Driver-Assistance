@@ -1,13 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/match"
     android:background="#F2F2F2"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_date_wise_app_bar" />
+    <include
+        android:id="@+id/card_viewfordate"
+        layout="@layout/layout_date_wise_app_bar" />
 
     <LinearLayout
+        android:id="@+id/resume_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card_viewfordate">
+
+        <Button
+            android:id="@+id/resume_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Resume Job"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/job_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/resume_layout"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
@@ -38,6 +57,6 @@
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
-</LinearLayout>
+</RelativeLayout>
