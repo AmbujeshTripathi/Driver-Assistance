@@ -17,8 +17,6 @@ import com.mygaadi.driverassistance.model.JobDetail;
 import com.mygaadi.driverassistance.utils.Utility;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -48,12 +46,17 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.customerEmail.setText(jobDetailModel.getCustomerEmail());
         holder.customerName.setText(jobDetailModel.getCustomerName());
         holder.customerNumber.setText(jobDetailModel.getCustomerMobile());
-        holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
-        holder.hubAddress.setText(jobDetailModel.getHubAddress());
+        if (jobDetailModel.getJobType().equalsIgnoreCase("1")) {
+            holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
+            holder.hubAddress.setText(jobDetailModel.getHubAddress());
+        } else {
+            holder.hubAddress.setText(jobDetailModel.getCustomerLocality());
+            holder.customerAddress.setText(jobDetailModel.getHubAddress());
+        }
         holder.requestStartTime.setText(Utility.getTimeFromDate(jobDetailModel.getStartTime()));
         holder.requestEndTime.setText(Utility.getTimeFromDate(jobDetailModel.getEndTime()));
         try {
-            if ((position == 0) && (checkTimeGap(jobDetailModel.getStartTime())))
+            if ((position == 0) && (Utility.checkDayGap(jobDetailModel.getStartTime())))
                 holder.buttonLayout.setVisibility(View.VISIBLE);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -143,13 +146,4 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         public void onItemClick(View view, int position);
     }
 
-    private boolean checkTimeGap(String startTime) throws ParseException {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Date date = dateFormatGmt.parse(startTime);
-        Date nowDate = new Date();
-        long diff = date.getTime() - nowDate.getTime();
-        int hours = (int) (diff / (1000 * 60 * 60));
-        return (hours <= 2);
-    }
 }

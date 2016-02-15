@@ -1,5 +1,6 @@
 package com.mygaadi.driverassistance.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -29,7 +30,6 @@ import com.mygaadi.driverassistance.recievers.SmsReaderReceiver;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
 import com.mygaadi.driverassistance.retrofit.RestCallback;
 import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
-import com.mygaadi.driverassistance.utils.PrefrenceUtility;
 import com.mygaadi.driverassistance.utils.Utility;
 import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
@@ -60,7 +60,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     private CustomGearDialog mProgressHUD;
     int time = 120 * 1000, interval = 1000;
     CountDownTimer mTimer;
-
+    public static final int PERMISSION_REQUEST_CODE = 102;
     //Broadcast receiver to monitor the sms
     private SmsReaderReceiver mSmsReceiver;
 
@@ -70,7 +70,6 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         showNoInternetConnectionDialog(this);
-
         initViews();
 
         etMobileNumber.addTextChangedListener(new TextWatcher() {
@@ -233,7 +232,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnRegister:
-                requestOtp("Loggin In");
+                requestOtp("Logging In");
                 break;
             case R.id.tvBack:
                 btnRegister.setEnabled(true);
@@ -243,6 +242,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
                 requestOtp("Resending OTP..");
                 break;
             case R.id.btn_verify:
+                Utility.hideSoftKeyboard(this, v);
                 String otpEntered = edtOtpCode.getText().toString();
                 if (otpEntered.equals("")) {
                     Utility.showToast(this, "Please enter OTP");
@@ -276,6 +276,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     }
 
     private void showOtpDialog() {
+        Utility.checkForPermission(this, new String[]{Manifest.permission.READ_SMS}, PERMISSION_REQUEST_CODE);
         mOtpDialog = new Dialog(ActivityRegistration.this);
         mOtpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mOtpDialog.setContentView(R.layout.dialog_otp_request);
@@ -399,14 +400,6 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
         utilitySingleton.saveStringInSharedPref(Constants.USER_NAME, data.getName());
         utilitySingleton.saveStringInSharedPref(Constants.USER_EMAIL, data.getEmail());
         utilitySingleton.saveStringInSharedPref(Constants.USER_TOKEN, model.getUserToken());
-
-        //Saving the data to the car insurance also
-        //Constant file used is also belong to car insurance module
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_ID, data.getUserId());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_NAME, data.getName());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_EMAIL, data.getEmail());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_TOKEN, model.getUserToken());
-
         startActivity(new Intent(this, MainActivity.class));
         finish();
 

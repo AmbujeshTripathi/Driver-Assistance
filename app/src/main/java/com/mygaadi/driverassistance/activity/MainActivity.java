@@ -51,15 +51,43 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == GPSTrackerService.PERMISSION_REQUEST_CODE) {
-            Utility.showToast(MainActivity.this, "GPS Permission granted!!!");
-            if (mService != null) {
-                mService.permissionGrantedMoveOn();
-            }
-        } else {
-            Utility.showToast(MainActivity.this, "GPS Permission denied!!!");
-            this.finish();
+
+        switch (requestCode) {
+
+            case GPSTrackerService.PERMISSION_REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (mService != null)
+                        mService.permissionGrantedMoveOn();
+
+                } else {
+                    Utility.showToast(MainActivity.this, "GPS Permission denied!!!");
+                    this.finish();
+                }
+                break;
+            case DashboardFragment.PERMISSION_REQUEST_CODE:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Utility.showToast(MainActivity.this, "Permission denied!!!");
+                    this.finish();
+                }
+                break;
+            case ActivityRegistration.PERMISSION_REQUEST_CODE:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Utility.showToast(MainActivity.this, "Permission denied!!!");
+                    this.finish();
+                }
+                break;
         }
+//
+//
+//        if (grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == GPSTrackerService.PERMISSION_REQUEST_CODE) {
+//            Utility.showToast(MainActivity.this, "GPS Permission granted!!!");
+//            if (mService != null) {
+//                mService.permissionGrantedMoveOn();
+//            }
+//        } else {
+//            Utility.showToast(MainActivity.this, "GPS Permission denied!!!");
+//            this.finish();
+//        }
     }
 
     @Override
