@@ -54,6 +54,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
     private String mCustomerMobile;
     private static int mCurrentIndex = 0;
     private Dialog dialog;
+    private String mSubStatusId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         TextView tvDropOff = (TextView) rootView.findViewById(R.id.tvAddressDropOff);
         String customerAddress = bundle.getString(Constants.CUSTOMER_ADDRESS);
         String hubAddress = bundle.getString(Constants.HUB_ADDRESS);
+        mSubStatusId = bundle.getString(Constants.KEY_SUB_STATUS_ID);
         if (jobType.equals("1")) {
             isPickUpJob = true;
             tvPickUp.setText(customerAddress);
@@ -187,6 +189,7 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
             Snackbar.make(getView(), "Unable to load status at this moment", Snackbar.LENGTH_SHORT).show();
             return;
         }
+        //Set the list to show on views , only sub-statuses with status 'in-progress i.e. 2' will be shown on views
         for (int i = 0; i < subStatusList.size(); i++) {
             SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(i);
             if (!subStatusModel.getStatusId().equals(Constants.STATUS_IN_PROGRESS)) {
@@ -194,8 +197,26 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
                 i--;
             }
         }
+
+        //Set the index to the sub-status from where we need to resume updating the sub-status
+        for (int i = 0; i < subStatusList.size(); i++) {
+            SubStatusListModel.SubStatusModel subStatusModel = subStatusList.get(i);
+            if (Integer.parseInt(subStatusModel.getSubStatusId()) == Integer.parseInt(mSubStatusId)) {
+                mCurrentIndex = i + 1;
+                break;
+            }
+        }
+
+        //If current index is greater than the number of sub-status shown on views , then there is a chance that after updating
+        // all its sub-statuses, API to mark this job as complete was not called hence we need to mark this job as a complete job
+        if (mCurrentIndex >= subStatusList.size()) {
+            updateStatusOnServerForCompleteJob(Constants.STATUS_COMPLETE, Constants.SUB_STATUS_READY_FOR_NEXT_JOB, "");
+            return;
+        }
+
         this.subStatusList = subStatusList;
         setStatusUpdateListOnViews(this.subStatusList);
+        updateListOfStatusViews();
     }
 
     private void updateListOfStatusViews() {
@@ -369,8 +390,14 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         params.put(Constants.KEY_COMMENT, comment);
         params.put(Constants.KEY_DOC_ID, "");
         Location location = GPSTrackerService.location;
-        params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
-        params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
+        if (location == null){
+            params.put(Constants.KEY_LATITUDE, "" );
+            params.put(Constants.KEY_LONGITUDE, "");
+        }else {
+            params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
+            params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
+        }
+
         RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
                 Constants.SERVICE_MODE.UPDATE_STATUS_IN_PROGRESS));
     }
@@ -385,8 +412,13 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
         params.put(Constants.KEY_COMMENT, comment);
         params.put(Constants.KEY_DOC_ID, "");
         Location location = GPSTrackerService.location;
-        params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
-        params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
+        if (location == null){
+            params.put(Constants.KEY_LATITUDE, "" );
+            params.put(Constants.KEY_LONGITUDE, "");
+        }else {
+            params.put(Constants.KEY_LATITUDE, "" + location.getLatitude());
+            params.put(Constants.KEY_LONGITUDE, "" + location.getLongitude());
+        }
         RetrofitRequest.updateStatus(params, new MyCallback<Model>(getActivity(), this, true, null, "",
                 Constants.SERVICE_MODE.UPDATE_STATUS_COMPLETE_CANCEL));
     }
@@ -421,11 +453,18 @@ public class StatusUpdateFragment extends Fragment implements RestCallback, View
                 case CAPTURE_IMAGE:
                     boolean isUploadedSuccessfully = data.getBooleanExtra(UploadJobCardFragment.IS_UPLOADED_SUCCESSFULLY, false);
                     if (isUploadedSuccessfully) {
-                        mCurrentIndex = mCurrentIndex + 1;
-                        updateListOfStatusViews();
+//                        mCurrentIndex = mCurrentIndex + 1;
+//                        updateListOfStatusViews();
+                        updateStatusOnServerForInProgressLead(mCurrentIndex, "Required images uploaded successfully.");
                     }
                     break;
             }
         }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
     }
 }

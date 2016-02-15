@@ -362,6 +362,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         bundle.putString(Constants.END_TIME, item.getEndTime());
         bundle.putString(Constants.KEY_MOBILE, item.getCustomerMobile());
         bundle.putString(Constants.JOB_TYPE, item.getJobType());
+        bundle.putString(Constants.KEY_SUB_STATUS_ID, item.getSubstatusId());
         Utility.navigateFragment(new StatusUpdateFragment(), StatusUpdateFragment.TAG, bundle, getActivity());
     }
 
@@ -411,7 +412,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//        super.onSaveInstanceState(outState);
         outState.putString(Constants.FILE_NAME, fileName);
     }
 }

@@ -48,6 +48,12 @@ public class ChooseImageActivity extends Activity implements View.OnClickListene
 
         Utility.checkForExternalDirectory(new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), CROPPED_IMAGE_PATH));
+
+
+        //Check for users permission for camera
+        if (checkForCemaraPermissions()) {
+            checkAndLaunchCamera();
+        }
     }
 
     @Override

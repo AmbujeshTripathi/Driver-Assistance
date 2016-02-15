@@ -175,4 +175,9 @@ public class UploadJobCardFragment extends DialogFragment implements View.OnClic
             isPolicyImageUploaded = true;
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
 }
