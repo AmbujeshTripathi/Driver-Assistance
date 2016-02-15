@@ -61,7 +61,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     private CustomGearDialog mProgressHUD;
     int time = 120 * 1000, interval = 1000;
     CountDownTimer mTimer;
-
+    public static final int PERMISSION_REQUEST_CODE = 102;
     //Broadcast receiver to monitor the sms
     private SmsReaderReceiver mSmsReceiver;
 
@@ -71,7 +71,6 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         showNoInternetConnectionDialog(this);
-        Utility.checkForPermission(this, new String[]{Manifest.permission.READ_SMS}, 102);
         initViews();
 
         etMobileNumber.addTextChangedListener(new TextWatcher() {
@@ -278,6 +277,7 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
     }
 
     private void showOtpDialog() {
+        Utility.checkForPermission(this, new String[]{Manifest.permission.READ_SMS}, PERMISSION_REQUEST_CODE);
         mOtpDialog = new Dialog(ActivityRegistration.this);
         mOtpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mOtpDialog.setContentView(R.layout.dialog_otp_request);

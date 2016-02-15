@@ -53,7 +53,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TimeZone;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -235,7 +234,8 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
 
     @Override
     public void onItemClick(View view, int position) {
-        JobDetail item = jobListModel.getData().get(position);
+//        JobDetail item = jobListModel.getData().get(position);
+        JobDetail item = filterSet.get(position);
         mJobId = item.getJobId();
         if (view.getId() == R.id.start_job) {
             String dateUpdatedValue = UtilitySingleton.getInstance(getActivity()).getStringFromSharedPref(Constants.IS_SELFIE_UPLOADED);
@@ -255,7 +255,7 @@ public class DashboardFragment extends Fragment implements OnDateStripActionList
         } else if (view.getId() == R.id.cardview) {
             Log.d(TAG, "card clicked");
             try {
-                if ((Utility.checkDayGap(item.getStartTime()))||(!Utility.checkTimeGap(item.getStartTime())))
+                if ((Utility.checkDayGap(item.getStartTime())) || (!Utility.checkTimeGap(item.getStartTime())))
                     Toast.makeText(getActivity(), "Task cannot be started.", Toast.LENGTH_SHORT).show();
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -70,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     this.finish();
                 }
                 break;
+            case ActivityRegistration.PERMISSION_REQUEST_CODE:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Utility.showToast(MainActivity.this, "Permission denied!!!");
+                    this.finish();
+                }
+                break;
         }
 //
 //

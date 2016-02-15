@@ -46,7 +46,7 @@ public class JobModelAdapter extends RecyclerView.Adapter<JobModelAdapter.CardVi
         holder.customerEmail.setText(jobDetailModel.getCustomerEmail());
         holder.customerName.setText(jobDetailModel.getCustomerName());
         holder.customerNumber.setText(jobDetailModel.getCustomerMobile());
-        if (jobDetailModel.getJobType() == "1") {
+        if (jobDetailModel.getJobType().equalsIgnoreCase("1")) {
             holder.customerAddress.setText(jobDetailModel.getCustomerLocality());
             holder.hubAddress.setText(jobDetailModel.getHubAddress());
         } else {

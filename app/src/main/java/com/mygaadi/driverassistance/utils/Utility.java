@@ -516,7 +516,7 @@ public class Utility {
         if (srcDateStr == null || srcDateStr.trim().equals(""))
             return date;
         try {
-            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             date = srcDf.parse(srcDateStr);
 
         } catch (ParseException e) {
