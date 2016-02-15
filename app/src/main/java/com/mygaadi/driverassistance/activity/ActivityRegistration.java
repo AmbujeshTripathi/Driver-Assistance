@@ -30,7 +30,6 @@ import com.mygaadi.driverassistance.recievers.SmsReaderReceiver;
 import com.mygaadi.driverassistance.retrofit.MyCallback;
 import com.mygaadi.driverassistance.retrofit.RestCallback;
 import com.mygaadi.driverassistance.retrofit.RetrofitRequest;
-import com.mygaadi.driverassistance.utils.PrefrenceUtility;
 import com.mygaadi.driverassistance.utils.Utility;
 import com.mygaadi.driverassistance.utils.UtilitySingleton;
 
@@ -401,14 +400,6 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
         utilitySingleton.saveStringInSharedPref(Constants.USER_NAME, data.getName());
         utilitySingleton.saveStringInSharedPref(Constants.USER_EMAIL, data.getEmail());
         utilitySingleton.saveStringInSharedPref(Constants.USER_TOKEN, model.getUserToken());
-
-        //Saving the data to the car insurance also
-        //Constant file used is also belong to car insurance module
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_ID, data.getUserId());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_NAME, data.getName());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_EMAIL, data.getEmail());
-        PrefrenceUtility.getInstance(this).saveStringInDefaultSharedPrefrence(Constants.USER_TOKEN, model.getUserToken());
-
         startActivity(new Intent(this, MainActivity.class));
         finish();
 
